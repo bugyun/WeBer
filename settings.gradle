@@ -1,0 +1,2 @@
+include ':app', ':weber-core', ':weber-x5-core'
+rootProject.name='WebViewHelper'
