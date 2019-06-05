@@ -1,4 +1,4 @@
-package vip.ruoyun.webviewhelper;
+package vip.ruoyun.webkit.x5;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,8 +14,7 @@ import com.tencent.smtt.sdk.ValueCallback;
 import java.io.File;
 import java.util.HashMap;
 
-public class X5WebHelper {
-
+public class WeBerHelper {
 
     public static void init(Context context) {
         QbSdk.setDownloadWithoutWifi(true);
@@ -52,7 +51,6 @@ public class X5WebHelper {
         //x5内核初始化接口
         QbSdk.initX5Environment(context.getApplicationContext(), initCallback);
     }
-
 
     /**
      * 播放视频的调用接口
