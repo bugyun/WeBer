@@ -2,13 +2,9 @@ package vip.ruoyun.webkit;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.view.ViewGroup;
-import android.webkit.JavascriptInterface;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.webkit.*;
 
 import java.util.ArrayList;
 
@@ -40,8 +36,6 @@ public class WeBerDemo {
         //JSCore
         //
 
-        //往 js 中注入类
-        webView.addJavascriptInterface(new AndroidtoJs(), "test");
 
 //        对于Android调用JS代码的方法有2种：
 
@@ -63,12 +57,16 @@ public class WeBerDemo {
             //必须要在页面加载完成之后才能调用
             webView.loadUrl("javascript:callJS()");
         }
+
+        //往 js 中注入类
+        webView.addJavascriptInterface(new AndroidtoJs(), "test");
+
         webView.loadUrl("file:///android_asset/javascript.html");
     }
 
 
     // 继承自Object类
-    public class AndroidtoJs extends Object {
+    public class AndroidtoJs {
 
         // 定义JS需要调用的方法
         // 被JS调用的方法必须加入@JavascriptInterface注解
@@ -76,11 +74,19 @@ public class WeBerDemo {
         public void hello(String msg) {
             System.out.println("JS调用了Android的hello方法");
         }
+
+        public String test(String msg) {
+
+            return "你好";
+        }
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void setWebChromeClient() {
-
+        //第三种方式 postWebMessage WebMessagePort
+        WebMessagePort[] webMessageChannel = webView.createWebMessageChannel();
+//        webView.postWebMessage(webMessageChannel);
     }
 
 
