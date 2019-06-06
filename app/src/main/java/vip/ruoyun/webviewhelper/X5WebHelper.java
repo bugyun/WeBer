@@ -51,8 +51,6 @@ public class X5WebHelper {
         };
         //x5内核初始化接口
         QbSdk.initX5Environment(context.getApplicationContext(), initCallback);
-
-
     }
 
 
@@ -157,7 +155,6 @@ public class X5WebHelper {
                 }
             }
         });
-
 
         HashMap<String, String> params = new HashMap<>();
         QbSdk.openFileReader(context, "/sdcard/xxx.doc", params, new ValueCallback<String>() {

@@ -2,7 +2,7 @@ package vip.ruoyun.webviewhelper;
 
 import android.app.Application;
 
-import vip.ruoyun.webkit.WeBer;
+import vip.ruoyun.webkit.WeBerDemo;
 
 public class App extends Application {
 
@@ -12,6 +12,6 @@ public class App extends Application {
         X5WebHelper.init(this);
         WebViewHelper.init();
 
-        WeBer.init();
+        WeBerDemo.init();
     }
 }

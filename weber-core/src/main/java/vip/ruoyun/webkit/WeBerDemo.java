@@ -1,0 +1,118 @@
+package vip.ruoyun.webkit;
+
+import android.annotation.SuppressLint;
+import android.os.Build;
+import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
+import java.util.ArrayList;
+
+public class WeBerDemo {
+
+    private ArrayList<WebChromeClient> webChromeClients = new ArrayList<>();
+    private ArrayList<WebViewClient> webViewClients = new ArrayList<>();
+
+    private WebView webView;
+
+    public static void init() {
+
+    }
+
+
+    @SuppressLint("ObsoleteSdkInt")
+    public void addWebChromeClient(WebChromeClient webChromeClient) {
+        WebSettings settings = webView.getSettings();
+
+        settings.setSavePassword(false);//关闭密码保存提醒功能
+        //通过以下设置，防止越权访问，跨域等安全问题：
+        settings.setAllowFileAccess(false);//使其不能加载本地的 html 文件，但是 x5 需要打开
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            settings.setAllowFileAccessFromFileURLs(false);
+            settings.setAllowUniversalAccessFromFileURLs(false);
+        }
+
+
+        //JSCore
+        //
+
+        //往 js 中注入类
+        webView.addJavascriptInterface(new AndroidtoJs(), "test");
+
+//        对于Android调用JS代码的方法有2种：
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {//小于 4.3 要删除多余的 js 对象
+            webView.removeJavascriptInterface("searchBoxJavaBridge_");
+            webView.removeJavascriptInterface("accessibility");
+            webView.removeJavascriptInterface("accessibilityTraversal");
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //19 4.4 以上的版本才能运行 占比99.16% https://mta.qq.com/mta/data/device/os
+            webView.evaluateJavascript("javascript:callJS()", new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String value) {
+
+                }
+            });
+        } else {
+            //必须要在页面加载完成之后才能调用
+            webView.loadUrl("javascript:callJS()");
+        }
+        webView.loadUrl("file:///android_asset/javascript.html");
+    }
+
+
+    // 继承自Object类
+    public class AndroidtoJs extends Object {
+
+        // 定义JS需要调用的方法
+        // 被JS调用的方法必须加入@JavascriptInterface注解
+        @JavascriptInterface
+        public void hello(String msg) {
+            System.out.println("JS调用了Android的hello方法");
+        }
+    }
+
+
+    public void setWebChromeClient() {
+
+    }
+
+
+    public void test() {
+        //方式1. 加载一个网页：
+        webView.loadUrl("http://www.google.com/");
+
+        //方式2：加载apk包中的html页面
+        webView.loadUrl("file:///android_asset/test.html");
+
+        //方式3：加载手机本地的html页面
+        webView.loadUrl("content://com.android.htmlfileprovider/sdcard/test.html");
+
+        // 方式4： 加载 HTML 页面的一小段内容
+        /**
+         * 参数说明：
+         * 参数1：需要截取展示的内容
+         * 内容里不能出现 ’#’, ‘%’, ‘\’ , ‘?’ 这四个字符，若出现了需用 %23, %25, %27, %3f 对应来替代，否则会出现异常
+         * 参数2：展示内容的类型
+         * 参数3：字节码
+         * webView.loadData(String data, String mimeType, String encoding)
+         */
+        //webView.loadData(String data, String mimeType, String encoding)
+
+    }
+
+    public void destory() {
+        if (webView != null) {
+            ((ViewGroup) webView.getParent()).removeView(webView);//rootView.removeView(mWebView);
+            webView.destroy();
+            webView = null;
+        }
+    }
+
+}
