@@ -142,10 +142,11 @@ public class WeBerHelper {
      * - 3：调起阅读器弹框
      * - -1：filePath 为空 打开失败
      */
-    public void openFile(Context context) {
+    public static void openFile(Context context, final android.webkit.ValueCallback<Boolean> valueCallback) {
         QbSdk.canOpenFile(context, "", new ValueCallback<Boolean>() {
             @Override
             public void onReceiveValue(Boolean isCanOpen) {
+                valueCallback.onReceiveValue(isCanOpen);
                 if (isCanOpen) {
                     Log.d("test", "文件可以打开");
                 } else {
@@ -153,8 +154,6 @@ public class WeBerHelper {
                 }
             }
         });
-
-
         HashMap<String, String> params = new HashMap<>();
         QbSdk.openFileReader(context, "/sdcard/xxx.doc", params, new ValueCallback<String>() {
             @Override
