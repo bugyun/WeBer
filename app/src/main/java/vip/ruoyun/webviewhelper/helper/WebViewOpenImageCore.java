@@ -1,4 +1,4 @@
-package vip.ruoyun.webkit;
+package vip.ruoyun.webviewhelper.helper;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -10,21 +10,24 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
-public class FileChooser {
+/**
+ * Created by ruoyun on 2018/7/4.
+ * Author:若云
+ * Mail:zyhdvlp@gmail.com
+ * Depiction:webview打开原生图片库
+ */
+public class WebViewOpenImageCore {
+    private Activity activity;
     private ValueCallback<Uri> uploadMessage;
     private ValueCallback<Uri[]> uploadMessageAboveL;
     private final static int FILE_CHOOSER_RESULT_CODE = 10000;
-    private WebView mWebView;
-    private WeBer weBer;
-    private Activity mActivity;
 
+    public WebViewOpenImageCore(Activity activity) {
+        this.activity = activity;
+    }
 
-    public void set() {
-
-        weBer.addWebChromeClient(new WebChromeClient());
-
-        mWebView.setWebChromeClient(new WebChromeClient() {
-
+    public void setImageCore(WebView webView) {
+        webView.setWebChromeClient(new WebChromeClient() {
             // For Android < 3.0
             public void openFileChooser(ValueCallback<Uri> valueCallback) {
                 uploadMessage = valueCallback;
@@ -45,25 +48,15 @@ public class FileChooser {
 
             // For Android >= 5.0
             @Override
-            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
+            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
                 uploadMessageAboveL = filePathCallback;
                 openImageChooserActivity();
                 return true;
             }
-
         });
     }
 
-    private void openImageChooserActivity() {
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("image/*");
-        mActivity.startActivityForResult(Intent.createChooser(i, "Image Chooser"), FILE_CHOOSER_RESULT_CODE);
-    }
-
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == FILE_CHOOSER_RESULT_CODE) {
             if (null == uploadMessage && null == uploadMessageAboveL)
                 return;
@@ -75,6 +68,13 @@ public class FileChooser {
                 uploadMessage = null;
             }
         }
+    }
+
+    private void openImageChooserActivity() {
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("image/*");
+        activity.startActivityForResult(Intent.createChooser(i, "Image Chooser"), FILE_CHOOSER_RESULT_CODE);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
