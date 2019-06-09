@@ -46,19 +46,27 @@ public class WeBerDemo {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+
+            String name = "Nihao ";
+            String method = "javascript:callJS(\"" + name + "\")";
+            method = "javascript:callJS(\"你好\")";
             //19 4.4 以上的版本才能运行 占比99.16% https://mta.qq.com/mta/data/device/os
-            webView.evaluateJavascript("javascript:callJS()", new ValueCallback<String>() {
+            webView.evaluateJavascript(method, new ValueCallback<String>() {
                 @Override
                 public void onReceiveValue(String value) {
 
                 }
             });
+            // loadUrl  evaluateJavascript
+
+            webView.evaluateJavascript(method, null);
         } else {
             //必须要在页面加载完成之后才能调用
             webView.loadUrl("javascript:callJS()");
         }
 
-        //往 js 中注入类
+        //往 js 中注入类 .17之前不安全
         webView.addJavascriptInterface(new AndroidtoJs(), "test");
 
         webView.loadUrl("file:///android_asset/javascript.html");
