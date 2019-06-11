@@ -1,27 +1,23 @@
 package vip.ruoyun.webkit;
 
 import android.net.Uri;
+import android.webkit.JsPromptResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
-
-import java.lang.reflect.Method;
-import java.util.HashMap;
 
 import vip.ruoyun.webkit.generate.WeBerBridgeImp;
 
-public class WeBerWebClient extends WebViewClient {
+public class WeBerWebChormeClient extends WebChromeClient {
 
-
-    public WeBerWebClient(WeBerView weBerView) {
+    public WeBerWebChormeClient(WeBerView weBerView) {
         this.weBerView = weBerView;
     }
 
     //保存反射的对象
-    private HashMap<String, Method> methodMap = new HashMap<>();
     private final WeBerView weBerView;
 
     @Override
-    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+    public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
         if (url.startsWith("js://webview")) { // 如果是返回数据
             //解析 url
             Uri parse = Uri.parse(url);
@@ -35,7 +31,7 @@ public class WeBerWebClient extends WebViewClient {
             }
             return true;
         }
-        return super.shouldOverrideUrlLoading(view, url);
-    }
 
+        return super.onJsPrompt(view, url, message, defaultValue, result);
+    }
 }

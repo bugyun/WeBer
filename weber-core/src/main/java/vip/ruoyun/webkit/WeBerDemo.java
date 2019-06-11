@@ -4,7 +4,13 @@ import android.annotation.SuppressLint;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.ViewGroup;
-import android.webkit.*;
+import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
+import android.webkit.WebMessagePort;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import java.util.ArrayList;
 
@@ -74,6 +80,7 @@ public class WeBerDemo {
 
 
     // 继承自Object类
+    @WeBerBridge("test")
     public class AndroidtoJs {
 
         // 定义JS需要调用的方法
@@ -87,6 +94,14 @@ public class WeBerDemo {
 
             return "你好";
         }
+    }
+
+    @WeBerBridge("test")
+    public class Android2JS {
+        public String test(String msg) {
+            return "你好";
+        }
+
     }
 
 

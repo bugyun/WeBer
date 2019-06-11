@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>你好</title>
+
+    <script>
+
+
+         //android 调用 js 方法,低版本中返回值怎么处理
+         function callJS() {
+            //alert("Android调用了JS的callJS方法");
+            console.log("Android调用了JS的callJS方法");
+           return "qqq";
+        }
+
+
+
+
+
+
+
+
+        //js 调用 android 方法:低版本
+        function callAndroid2() {
+            //document.location = "js://webview?arg1=111&arg2=222";
+            student.hello("", function (name) {
+
+            });
+            // alert('Hello,...');
+
+            // test.hello("js调用了android中的hello方法");
+        }
+
+        function Student() {
+            this.method = [];
+            this.hello = function (name, func) {
+                this.method.put(func);
+                window.location.href = 'js://webview?method=hello&callback=' + (this.method.length - 1) + '&value=' + encodeURIComponent(name);
+                //document.location = "js://webview?arg1=111&arg2=222";
+                alert('Hello,...');
+                console.log("Android调用了JS的callJS方法");
+            };
+            //shouldOverrideUrlLoading 中进行拦截方法
+            this.handleFunc = function (index, name) {
+                var func = this.method[index];
+                func(name);
+                this.method.remove(func);
+            }
+        }
+
+         //js 调用 android 方法:高版本
+         function callAndroid() {
+            var today = new Date();
+            console.log(today.getTime());
+            var name = test.hello("js调用了android中的hello方法");
+            console.log(today.getTime());
+            console.log(name);
+        }
+
+        var student = new Student();
+
+        //使用 prompt 来传递消息
+        var name=prompt("Please enter your name","")
+
+    </script>
+
+</head>
+
+<body>
+
+<button type="button" id="button1" onclick="callAndroid()">Click Me!</button>
+
+</body>
+</html>
