@@ -296,9 +296,17 @@ public class WebActivity extends AppCompatActivity {
             return "你好,1111!";
         }
 
+        @JavascriptInterface
         public String test(String msg) {
 
             return "你好";
+        }
+
+        @JavascriptInterface
+        public void callback(String name, String path) {
+
+            Log.d("zyh", "callback " + path);
+
         }
     }
 

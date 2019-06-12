@@ -1,10 +1,12 @@
 package vip.ruoyun.webkit.generate;
 
 import android.text.TextUtils;
-
-import vip.ruoyun.webkit.WeBerDemo.AndroidtoJs;
 import vip.ruoyun.webkit.WeBerDemo.Android2JS;
+import vip.ruoyun.webkit.WeBerDemo.AndroidtoJs;
 import vip.ruoyun.webkit.WeBerView;
+
+import java.lang.reflect.Method;
+import java.util.HashMap;
 
 
 public class WeBerBridgeImp {
@@ -39,6 +41,15 @@ public class WeBerBridgeImp {
             default:
                 break;
         }
-
     }
+
+
+
+    private HashMap<String, Method> methodMap = new HashMap<>();
+
+
+
+
+
+
 }
