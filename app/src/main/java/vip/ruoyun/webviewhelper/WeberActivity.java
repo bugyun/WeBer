@@ -5,7 +5,6 @@ import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
 import android.view.ViewGroup;
 
 import com.tencent.smtt.export.external.interfaces.SslError;
@@ -106,12 +105,12 @@ public class WeberActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && mWeBerView.canGoBack()) {
+    public void onBackPressed() {
+        if (mWeBerView.canGoBack()) {
             mWeBerView.goBack();
-            return true;
+            return;
         }
-        return super.onKeyDown(keyCode, event);
+        super.onBackPressed();
     }
 
     private class TestWeBerChromeClient extends WeBerChromeClient {

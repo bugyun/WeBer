@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.tencent.smtt.sdk.TbsReaderView;
 import com.tencent.smtt.sdk.WebView;
@@ -32,6 +33,46 @@ public class Test {
         webView.getX5WebViewExtension();
         //在没有⾃定义UA的情况下，使⽤您的app打开⽹⻚页，显示000000表示加载的是系统内核，显示⼤于零的数字表示加载了x5内核（该数字 是x5内核版本号）
         //http://soft.imtt.qq.com/browser/tes/feedback.html
+    }
+
+
+    public static void longclick(WebView webView) {
+        //4、操作图片（完整代码）
+        webView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                WebView.HitTestResult result = ((WebView) v).getHitTestResult();
+                if (null == result)
+                    return false;
+                int type = result.getType();
+                if (type == WebView.HitTestResult.UNKNOWN_TYPE)
+                    return false;
+                // 这里可以拦截很多类型，我们只处理图片类型就可以了
+                switch (type) {
+                    case WebView.HitTestResult.PHONE_TYPE: // 处理拨号
+                        break;
+                    case WebView.HitTestResult.EMAIL_TYPE: // 处理Email
+                        break;
+                    case WebView.HitTestResult.GEO_TYPE: // 地图类型
+                        break;
+                    case WebView.HitTestResult.SRC_ANCHOR_TYPE: // 超链接
+                        break;
+                    case WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE:
+                        break;
+                    case WebView.HitTestResult.IMAGE_TYPE: // 处理长按图片的菜单项
+                        // 获取图片的路径
+                        String saveImgUrl = result.getExtra();
+                        // 跳转到图片详情页，显示图片
+//                        Intent i = new Intent(MainActivity.this, ImageActivity.class);
+//                        i.putExtra("imgUrl", saveImgUrl);
+//                        startActivity(i);
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     /**
