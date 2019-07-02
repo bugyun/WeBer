@@ -1,4 +1,4 @@
-package vip.ruoyun.webkit.x5;
+package vip.ruoyun.webviewhelper;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -6,6 +6,9 @@ import android.os.Build;
 import android.view.View;
 import android.webkit.ValueCallback;
 import com.tencent.smtt.sdk.WebSettings;
+
+import vip.ruoyun.webkit.x5.WeBerHelper;
+import vip.ruoyun.webkit.x5.WeBerView;
 
 public class WeBer {
 

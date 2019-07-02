@@ -6,6 +6,7 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 
 import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebChromeClient;
@@ -17,46 +18,82 @@ import com.tencent.smtt.sdk.WebView;
  * Mail:zyhdvlp@gmail.com
  * Depiction:
  */
-public class FileChooserChromeClient extends WebChromeClient {
+public class WeBerChromeClient extends WebChromeClient {
 
     private ValueCallback<Uri> uploadFile;
     private ValueCallback<Uri[]> uploadFiles;
     private final static int FILE_CHOOSER_RESULT_CODE = 10000;
+    private FileChooserListener fileChooserListener;
+
+    public interface FileChooserListener {
+        void onShowFileChooser(Intent intent, int requestCode);
+    }
+
+    public void setFileChooserListener(FileChooserListener fileChooserListener) {
+        this.fileChooserListener = fileChooserListener;
+    }
 
     // For Android < 3.0
     public void openFileChooser(ValueCallback<Uri> valueCallback) {
         uploadFile = valueCallback;
-        openFileChooseProcess();
+        openFileChooseProcess(new String[]{"*/*"});
     }
 
     // For Android  >= 3.0
     public void openFileChooser(ValueCallback valueCallback, String acceptType) {
         uploadFile = valueCallback;
-        openFileChooseProcess();
+        if (TextUtils.isEmpty(acceptType)) {
+            openFileChooseProcess(new String[]{"*/*"});
+        } else {
+            openFileChooseProcess(new String[]{acceptType});
+        }
     }
 
     //For Android  >= 4.1
+    @Override
     public void openFileChooser(ValueCallback<Uri> valueCallback, String acceptType, String capture) {
         uploadFile = valueCallback;
-        openFileChooseProcess();
+        if (TextUtils.isEmpty(acceptType)) {
+            openFileChooseProcess(new String[]{"*/*"});
+        } else {
+            openFileChooseProcess(new String[]{acceptType});
+        }
     }
 
     // For Android >= 5.0
     @Override
     public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
         uploadFiles = filePathCallback;
-        openFileChooseProcess();
+        if (fileChooserParams.getAcceptTypes() != null && fileChooserParams.getAcceptTypes().length > 0) {
+            openFileChooseProcess(fileChooserParams.getAcceptTypes());
+        } else {
+            openFileChooseProcess(new String[]{"*/*"});
+        }
         return true;
     }
 
-    private void openFileChooseProcess() {
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType("*/*");//所有文件
-        i.setType("image/*");//图片
-//        startActivityForResult(Intent.createChooser(i, "File Chooser"), FILE_CHOOSER_RESULT_CODE);
+    /**
+     * type 类型 :多个 "video/;image/" 单个 "image/*"
+     * intent.setType(“video/;image/”);//同时选择视频和图片
+     * i.setType("image/*");//图片
+     *
+     * @param acceptType 类型
+     */
+    private void openFileChooseProcess(String[] acceptType) {
+        if (fileChooserListener != null) {
+            StringBuilder typeBuilder = new StringBuilder();
+            for (int i = 0; i < acceptType.length; i++) {
+                typeBuilder.append(acceptType[i]);
+                if (i < acceptType.length - 1) {
+                    typeBuilder.append(";");
+                }
+            }
+            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+            i.addCategory(Intent.CATEGORY_OPENABLE);
+            i.setType(typeBuilder.toString());
+            fileChooserListener.onShowFileChooser(Intent.createChooser(i, "File Chooser"), FILE_CHOOSER_RESULT_CODE);
+        }
     }
-
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == FILE_CHOOSER_RESULT_CODE) {
@@ -96,6 +133,4 @@ public class FileChooserChromeClient extends WebChromeClient {
         uploadFiles.onReceiveValue(results);
         uploadFiles = null;
     }
-
-
 }

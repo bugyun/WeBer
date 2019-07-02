@@ -17,7 +17,6 @@ public class WeBerHelper {
 
     public static final String debugTBSUrl = "http://debugtbs.qq.com/";
 
-
     /**
      * 接⼊TBS SDK后，⾸次启动卡顿怎么办？
      * <p>
@@ -27,7 +26,7 @@ public class WeBerHelper {
      * 多进程方式
      * 在调用TBS init 初始化之前、创建WebView之前进行如下配置，以开启优化方案
      */
-    public static void multiprocessOptimize() {
+    public static void multiProcessOptimize() {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put(TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER, true);
         QbSdk.initTbsSettings(map);
@@ -54,7 +53,7 @@ public class WeBerHelper {
      * @param context
      */
     public static void init(Context context, QbSdk.PreInitCallback preInitCallback) {
-        QbSdk.setDownloadWithoutWifi(true);
+//        QbSdk.setDownloadWithoutWifi(true);
         if (null == preInitCallback) {
             preInitCallback = new QbSdk.PreInitCallback() {
                 @Override

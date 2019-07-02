@@ -302,3 +302,6 @@
 
 -keep class **JNI* {*;}
 
+-keepclassmembers class * extends com.tencent.smtt.sdk.WebChromeClient{
+   public void openFileChooser(...);
+}

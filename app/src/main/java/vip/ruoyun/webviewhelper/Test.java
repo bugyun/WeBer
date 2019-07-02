@@ -1,4 +1,4 @@
-package vip.ruoyun.webkit.x5;
+package vip.ruoyun.webviewhelper;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import com.tencent.smtt.sdk.TbsReaderView;
 import com.tencent.smtt.sdk.WebView;
 
 import java.io.File;
+
+import vip.ruoyun.webkit.x5.WeBerHelper;
 
 /**
  * Created by ruoyun on 2019-07-02.

@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ClientCertRequest;
 import android.webkit.ConsoleMessage;
+import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsPromptResult;
@@ -68,6 +69,13 @@ public class WebActivity extends AppCompatActivity {
         wetSettings.setDomStorageEnabled(true);//DOM storage 是HTML5提供的一种标准接口，主要将键值对存储在本地
         wetSettings.setJavaScriptEnabled(true);
 
+
+        mWebView.setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+
+            }
+        });
         mWebView.setWebViewClient(new WebViewClient() {
 
             @Override

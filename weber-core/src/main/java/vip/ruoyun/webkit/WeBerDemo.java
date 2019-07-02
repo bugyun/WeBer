@@ -85,6 +85,7 @@ public class WeBerDemo {
             System.out.println("JS调用了Android的hello方法");
         }
 
+        @JavascriptInterface
         public String test(String msg) {
 
             return "你好";
