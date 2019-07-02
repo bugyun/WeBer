@@ -1,16 +1,11 @@
 package vip.ruoyun.webkit;
 
 import android.annotation.SuppressLint;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.ViewGroup;
-import android.webkit.JavascriptInterface;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
-import android.webkit.WebMessagePort;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.webkit.*;
 
 import java.util.ArrayList;
 
@@ -104,12 +99,31 @@ public class WeBerDemo {
 
     }
 
-
+    //https://android.googlesource.com/platform/cts/+/764c7c7fd72240330c15a3bcb1c7bd99cde83a1c/tests/tests/webkit/src/android/webkit/cts/PostMessageTest.java
+    //https://html.spec.whatwg.org/multipage/web-messaging.html#messagechannel
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void setWebChromeClient() {
         //第三种方式 postWebMessage WebMessagePort
         WebMessagePort[] webMessageChannel = webView.createWebMessageChannel();
 //        webView.postWebMessage(webMessageChannel);
+
+
+        final WebMessagePort[] channel = webView.createWebMessageChannel();
+
+        WebMessagePort port = channel[0];
+        port.setWebMessageCallback(new WebMessagePort.WebMessageCallback() {
+            @Override
+            public void onMessage(WebMessagePort port, WebMessage message) {
+
+                message.getData();
+
+            }
+        });
+
+        webView.postWebMessage(new WebMessage("", new WebMessagePort[]{channel[1]}),
+                Uri.parse(""));
+
+
     }
 
 

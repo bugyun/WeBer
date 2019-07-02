@@ -19,25 +19,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".WeberActivity"></activity>
+        <activity
+            android:name=".WeberActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@style/WeBerTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <!--windowSoftInputMode 避免输入法界面弹出后遮挡输入光标的问题-->
+            <!--theme 在非硬绘手机和声明需要controller的网页上，视频切换全屏和全屏切换回页面内会出现视频窗口透明问题-->
+        </activity>
         <activity android:name=".WebActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity> <!-- x5视频播放器 -->
-        <activity
-            android:name="com.tencent.smtt.sdk.VideoActivity"
-            android:alwaysRetainTaskState="true"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:exported="false"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="com.tencent.smtt.tbs.video.PLAY" />
-
-                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>

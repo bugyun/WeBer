@@ -1,20 +1,27 @@
 package vip.ruoyun.webviewhelper;
 
+import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.tencent.smtt.sdk.CookieSyncManager;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.utils.TbsLog;
 
+import vip.ruoyun.webkit.x5.FileChooserChromeClient;
 import vip.ruoyun.webkit.x5.WeBerView;
 
 public class WeberActivity extends AppCompatActivity {
+
+    FileChooserChromeClient chromeClient = new FileChooserChromeClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weber);
+        getWindow().setFormat(PixelFormat.TRANSLUCENT);//这个对宿主没什么影响，建议声明
 
         WeBerView mWeBerView = findViewById(R.id.mWeBerView);
 
@@ -52,5 +59,12 @@ public class WeberActivity extends AppCompatActivity {
         CookieSyncManager.createInstance(this);
         CookieSyncManager.getInstance().sync();
 
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        chromeClient.onActivityResult(requestCode, resultCode, data);
     }
 }

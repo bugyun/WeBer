@@ -8,4 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+    <style name="WeBerTheme">
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+
 </resources>

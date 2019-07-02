@@ -1,4 +1,17 @@
+#-optimizationpasses 7
+#-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+-dontoptimize
+-dontusemixedcaseclassnames
+-verbose
+-dontskipnonpubliclibraryclasses
+-dontskipnonpubliclibraryclassmembers
+-dontwarn dalvik.**
 -dontwarn com.tencent.smtt.**
+#-overloadaggressively
+
+# ------------------ Keep LineNumbers and properties ---------------- #
+-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod
+# --------------------------------------------------------------------------
 
 # Addidional for x5.sdk classes for apps
 

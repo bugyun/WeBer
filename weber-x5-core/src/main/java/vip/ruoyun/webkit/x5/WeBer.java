@@ -18,7 +18,7 @@ public class WeBer {
     }
 
     public static void openFile(Context context, ValueCallback<Boolean> valueCallback) {
-        WeBerHelper.openFile(context, valueCallback);
+//        WeBerHelper.openFile(context, valueCallback);
     }
 
     public static Builder init() {
