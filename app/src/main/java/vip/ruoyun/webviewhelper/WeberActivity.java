@@ -61,7 +61,6 @@ public class WeberActivity extends AppCompatActivity {
         chromeClient.onActivityResult(requestCode, resultCode, data);
     }
 
-
     /**
      * 激活WebView为活跃状态，能正常执行网页的响应
      */
