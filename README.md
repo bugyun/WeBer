@@ -50,7 +50,7 @@ Application中进行初始化
 ```java
 WeBerHelper.init(context);
 ```
-播放视频
+播放视频,context参数只能是 activity 类型的 context，不能设置为 Application 的 context。
 ```java
 WeBerHelper.playVideo(context,videoUrl);
 WeBerHelper.playVideo(Context context, String videoUrl, Bundle extraData);
