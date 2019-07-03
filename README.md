@@ -83,6 +83,11 @@ viewClient.setOnLoadWebViewListener(new WeBerViewClient.OnLoadWebViewListener() 
     <!--windowSoftInputMode 避免输入法界面弹出后遮挡输入光标的问题-->
     android:windowSoftInputMode="stateHidden|adjustResize">
 </activity>
+
+//styles.xml
+<style name="WeBerTheme">
+    <item name="android:windowIsTranslucent">false</item>
+</style>
 ```
 
 ```java
