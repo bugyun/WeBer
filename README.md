@@ -30,6 +30,7 @@ buildscript {
     ext.kotlin_version = '1.3.31'
     repositories {
         ...
+        jcenter()
         maven { url "https://dl.bintray.com/bugyun/maven" } //我的仓库,如果 jcenter 能找到，就不要添加
     }
     dependencies {
@@ -39,6 +40,7 @@ buildscript {
 allprojects {
     repositories {
         ...
+        jcenter()
         maven { url "https://dl.bintray.com/bugyun/maven" } //我的仓库,如果 jcenter 能找到，就不要添加
     }
 }
