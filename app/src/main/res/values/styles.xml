@@ -9,7 +9,7 @@
     </style>
 
 
-    <style name="WeBerTheme">
+    <style name="WeBerTheme" parent="AppTheme">
         <item name="android:windowIsTranslucent">false</item>
     </style>
 

@@ -40,7 +40,7 @@ public class WeBerChromeClient extends WebChromeClient {
     }
 
     // For Android  >= 3.0
-    public void openFileChooser(ValueCallback valueCallback, String acceptType) {
+    public void openFileChooser(ValueCallback<Uri> valueCallback, String acceptType) {
         uploadFile = valueCallback;
         if (TextUtils.isEmpty(acceptType)) {
             openFileChooseProcess(new String[]{"*/*"});
@@ -65,7 +65,11 @@ public class WeBerChromeClient extends WebChromeClient {
     public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
         uploadFiles = filePathCallback;
         if (fileChooserParams.getAcceptTypes() != null && fileChooserParams.getAcceptTypes().length > 0) {
-            openFileChooseProcess(fileChooserParams.getAcceptTypes());
+            if (fileChooserParams.getAcceptTypes().length == 1 && TextUtils.isEmpty(fileChooserParams.getAcceptTypes()[0])) {
+                openFileChooseProcess(new String[]{"*/*"});
+            } else {
+                openFileChooseProcess(fileChooserParams.getAcceptTypes());
+            }
         } else {
             openFileChooseProcess(new String[]{"*/*"});
         }

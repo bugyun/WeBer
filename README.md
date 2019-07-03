@@ -68,6 +68,8 @@ WeBerHelper.openFile(Context context, String filePath, HashMap<String, String> p
 需要继承 WeBerChromeClient,可以添加文件的监听器。当 h5 有input 标签的时候，响应事件。可以不设置。
 ```
 <input class="filechooser" id="file_chooser" type="file" placeholder="file path">
+//multiple="multiple" : 只能支持单文件，所以设置multiple无效
+//accept="image/*" : 如果不传，默认所有文件类型
 ```
 
 

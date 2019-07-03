@@ -5,7 +5,10 @@ import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
 
 import com.tencent.smtt.export.external.interfaces.SslError;
 import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
@@ -14,7 +17,6 @@ import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.utils.TbsLog;
 
 import vip.ruoyun.webkit.x5.WeBerChromeClient;
-import vip.ruoyun.webkit.x5.WeBerHelper;
 import vip.ruoyun.webkit.x5.WeBerView;
 import vip.ruoyun.webkit.x5.WeBerViewClient;
 
@@ -24,6 +26,9 @@ public class WeberActivity extends AppCompatActivity {
     private TestWeBerChromeClient chromeClient = new TestWeBerChromeClient();
     private TestWeBerViewClient viewClient = new TestWeBerViewClient();
     private WeBerView mWeBerView;
+
+    private final String fileUrl = "file:///android_asset/webpage/fileChooser.html";
+    private final String videoUrl = "file:///android_asset/webpage/fullscreenVideo.html";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +42,11 @@ public class WeberActivity extends AppCompatActivity {
         viewClient.setOnLoadWebViewListener(new WeBerViewClient.OnLoadWebViewListener() {
             @Override
             public void onPageFinished(boolean isSuccess) {
-                //如果成功显示成功界面
-                //失败显示失败界面
+                if (isSuccess) {//如果成功显示成功界面
+                    Log.d("zyh", "成功显示成功界面");
+                } else {//失败显示失败界面
+                    Log.d("zyh", "显示失败界面");
+                }
             }
         });
         chromeClient.setFileChooserListener(new WeBerChromeClient.FileChooserListener() {
@@ -48,10 +56,39 @@ public class WeberActivity extends AppCompatActivity {
             }
         });
         long time = System.currentTimeMillis();
-        mWeBerView.loadUrl(WeBerHelper.debugTBSUrl);
+//        mWeBerView.loadUrl(WeBerHelper.debugTBSUrl);
+//        mWeBerView.loadUrl(fileUrl);
+        mWeBerView.loadUrl(videoUrl);
         TbsLog.d("time-cost", "cost time: " + (System.currentTimeMillis() - time));
         CookieSyncManager.createInstance(this);
         CookieSyncManager.getInstance().sync();
+
+        mWeBerView.getView().setOverScrollMode(View.OVER_SCROLL_ALWAYS);
+        mWeBerView.addJavascriptInterface(new WebViewJavaScriptFunction(), "Android");
+
+    }
+
+    private class WebViewJavaScriptFunction {
+
+        @JavascriptInterface
+        public void onX5ButtonClicked() {
+            PlayVideoFunc.enableX5FullscreenFunc(mWeBerView);
+        }
+
+        @JavascriptInterface
+        public void onCustomButtonClicked() {
+            PlayVideoFunc.disableX5FullscreenFunc(mWeBerView);
+        }
+
+        @JavascriptInterface
+        public void onLiteWndButtonClicked() {
+            PlayVideoFunc.enableLiteWndFunc(mWeBerView);
+        }
+
+        @JavascriptInterface
+        public void onPageVideoClicked() {
+            PlayVideoFunc.enablePageVideoFunc(mWeBerView);
+        }
     }
 
     @Override
