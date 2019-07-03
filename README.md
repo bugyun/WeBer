@@ -20,21 +20,17 @@ android {
 
 ```java
 dependencies {
-    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.1'
+    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.2'
 }
 ```
 
 如果找不到项目，可以在根 build.gradle 中添加如下配置
 ```java
 buildscript {
-    ext.kotlin_version = '1.3.31'
     repositories {
         ...
         jcenter()
         maven { url "https://dl.bintray.com/bugyun/maven" } //我的仓库,如果 jcenter 能找到，就不要添加
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0-alpha13'
     }
 }
 allprojects {
@@ -60,18 +56,19 @@ WeBerHelper.playVideo(Context context, String videoUrl, Bundle extraData);
 
 打开本地文件
 ```java
-WeBerHelper.openFile(Context context, String filePath, HashMap<String, String> params, final android.webkit.ValueCallback<Boolean> valueCallback);
+WeBerHelper.openFile(Context context, String filePath, HashMap<String, String> params,ValueCallback<Boolean> valueCallback);
 ```
 
 ## WeBerChromeClient
 
-需要继承 WeBerChromeClient,可以添加文件的监听器。当 h5 有input 标签的时候，响应事件。可以不设置。
-```
+需要继承 WeBerChromeClient,可以添加文件的监听器。
+
+当 h5 有input 标签的时候，响应事件。可以不设置。
+```html
 <input class="filechooser" id="file_chooser" type="file" placeholder="file path">
 //multiple="multiple" : 只能支持单文件，所以设置multiple无效
 //accept="image/*" : 如果不传，默认所有文件类型
 ```
-
 
 ```java
 
@@ -137,7 +134,7 @@ viewClient.setOnLoadWebViewListener(new WeBerViewClient.OnLoadWebViewListener() 
 </activity>
 
 //styles.xml
-<style name="WeBerTheme">
+<style name="WeBerTheme" parent="AppTheme">
     <item name="android:windowIsTranslucent">false</item>
 </style>
 ```

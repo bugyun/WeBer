@@ -137,7 +137,7 @@ public class WeBerHelper {
      * @param valueCallback 提供 miniqb 打开/关闭时给调用方回调通知,以便应用层做相应处理。 在单独进程打开文件的场景中，回调参数出现如下字符时，表示可以关闭当前进程，避免内存占用。
      * @return 1：用 QQ 浏览器打开 2：用 MiniQB 打开 3：调起阅读器弹框 -1：filePath 为空 打开失败
      */
-    public static int openFile(Context context, String filePath, HashMap<String, String> params, final android.webkit.ValueCallback<Boolean> valueCallback) {
+    public static int openFile(Context context, String filePath, HashMap<String, String> params, final ValueCallback<Boolean> valueCallback) {
         QbSdk.canOpenFile(context, filePath, new ValueCallback<Boolean>() {
             @Override
             public void onReceiveValue(Boolean isCanOpen) {
