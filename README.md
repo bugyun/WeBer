@@ -4,14 +4,42 @@ Android x5 内核 WebView 的 Helper
 
 ## 使用方法
 
+x5内核现在只提供了 v7a 的 so 库，所以如果要使用的话，请在 主 build.gradle 中添加如下配置。
+```xml
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        ndk {
+            abiFilters "armeabi-v7a"
+        }
+    }
+}
+```
+
 在子项目中的 build.gradle 文件中添加
 
 ```java
 dependencies {
-    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.0'
+    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.1'
 }
 ```
 
+## 使用
+
+Application中进行初始化
+```java
+WeBerHelper.init(context);
+```
+播放视频
+```java
+WeBerHelper.playVideo(context,videoUrl);
+WeBerHelper.playVideo(Context context, String videoUrl, Bundle extraData);
+```
+
+打开本地文件
+```java
+WeBerHelper.openFile(Context context, String filePath, HashMap<String, String> params, final android.webkit.ValueCallback<Boolean> valueCallback);
+```
 
 ## WeBerChromeClient
 
