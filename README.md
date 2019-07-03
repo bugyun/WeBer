@@ -1,6 +1,6 @@
 # WeBer
 Android x5 内核 WebView 的 Helper
-
+完美兼容 AndroidX 和 android 库，欢迎使用~~~
 
 ## 使用方法
 
