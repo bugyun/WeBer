@@ -5,7 +5,7 @@ Android x5 内核 WebView 的 Helper
 ## 使用方法
 
 x5内核现在只提供了 v7a 的 so 库，所以如果要使用的话，请在 主 build.gradle 中添加如下配置。
-```xml
+```java
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -18,14 +18,14 @@ android {
 
 在子项目中的 build.gradle 文件中添加
 
-```xml
+```java
 dependencies {
     implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.1'
 }
 ```
 
 如果找不到项目，可以在根 build.gradle 中添加如下配置
-```xml
+```java
 buildscript {
     ext.kotlin_version = '1.3.31'
     repositories {
