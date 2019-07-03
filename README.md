@@ -287,5 +287,8 @@ public class WeberActivity extends AppCompatActivity {
 }
 ```
 
+## 混淆
+
+内部已经内置了混淆，所以不需要添加任何混淆
 
 
