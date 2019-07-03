@@ -72,7 +72,7 @@ viewClient.setOnLoadWebViewListener(new WeBerViewClient.OnLoadWebViewListener() 
     android:layout_height="match_parent" />
 ```
 
-```java
+```xml
 //manifest
 <activity
     android:name=".WeberActivity"
