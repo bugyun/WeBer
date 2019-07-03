@@ -18,9 +18,29 @@ android {
 
 在子项目中的 build.gradle 文件中添加
 
-```java
+```xml
 dependencies {
     implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.1'
+}
+```
+
+如果找不到项目，可以在根 build.gradle 中添加如下配置
+```xml
+buildscript {
+    ext.kotlin_version = '1.3.31'
+    repositories {
+        ...
+        maven { url "https://dl.bintray.com/bugyun/maven" } //我的仓库,如果 jcenter 能找到，就不要添加
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.0-alpha13'
+    }
+}
+allprojects {
+    repositories {
+        ...
+        maven { url "https://dl.bintray.com/bugyun/maven" } //我的仓库,如果 jcenter 能找到，就不要添加
+    }
 }
 ```
 
