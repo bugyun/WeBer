@@ -13,18 +13,21 @@ import android.webkit.JavascriptInterface;
 import com.tencent.smtt.export.external.interfaces.SslError;
 import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
 import com.tencent.smtt.sdk.CookieSyncManager;
+import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.utils.TbsLog;
 
 import vip.ruoyun.webkit.x5.WeBerChromeClient;
 import vip.ruoyun.webkit.x5.WeBerView;
 import vip.ruoyun.webkit.x5.WeBerViewClient;
+import vip.ruoyun.webkit.x5.jsbridge.BridgeHandler;
+import vip.ruoyun.webkit.x5.jsbridge.WeBerViewBridgeClient;
 
 
 public class WeberActivity extends AppCompatActivity {
 
     private TestWeBerChromeClient chromeClient = new TestWeBerChromeClient();
-    private TestWeBerViewClient viewClient = new TestWeBerViewClient();
+    private TestWeBerViewClient viewClient;
     private WeBerView mWeBerView;
 
     private final String fileUrl = "file:///android_asset/webpage/fileChooser.html";
@@ -36,7 +39,26 @@ public class WeberActivity extends AppCompatActivity {
         setContentView(R.layout.activity_weber);
         getWindow().setFormat(PixelFormat.TRANSLUCENT);//这个对宿主没什么影响，建议声明
 
+
         mWeBerView = findViewById(R.id.mWeBerView);
+
+        viewClient = new TestWeBerViewClient(mWeBerView);
+
+        viewClient.registerHandler("", new BridgeHandler() {
+            @Override
+            public void handler(String data, ValueCallback<String> valueCallback) {
+                valueCallback.onReceiveValue("");
+            }
+        });
+
+        viewClient.callHandler("functionInJs", "data from Java", new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String data) {
+                // TODO Auto-generated method stub
+                Log.i("zyh", "reponse data from js " + data);
+            }
+        });
+
         mWeBerView.setWebChromeClient(chromeClient);
         mWeBerView.setWebViewClient(viewClient);
         viewClient.setOnLoadWebViewListener(new WeBerViewClient.OnLoadWebViewListener() {
@@ -164,7 +186,13 @@ public class WeberActivity extends AppCompatActivity {
         }
     }
 
-    private class TestWeBerViewClient extends WeBerViewClient {
+    private class TestWeBerViewClient extends WeBerViewBridgeClient {
+
+
+        public TestWeBerViewClient(WeBerView weBerView) {
+            super(weBerView);
+        }
+
         @Override
         public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
             //1.可以通过 url 来判断是否要接受证书

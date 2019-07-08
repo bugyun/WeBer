@@ -286,6 +286,43 @@ public class WeberActivity extends AppCompatActivity {
 }
 ```
 
+## JSBridge
+如果你的项目使用了 https://github.com/lzyzsd/JsBridge 开源库，那么现在可以使用本库的 JSBridge 来进行兼容。
+
+使用
+```
+dependencies {
+    implementation 'vip.ruoyun.webkit:weber-x5-jsbridge:1.0.0'
+}
+```
+
+继承 WeBerViewBridgeClient 类
+```java
+private class TestWeBerViewClient extends WeBerViewBridgeClient {
+    ...
+}
+
+TestWeBerViewClient viewClient = new TestWeBerViewClient(mWeBerView);
+mWeBerView.setWebViewClient(viewClient);
+
+//注册方法
+viewClient.registerHandler("submitFromWeb", new BridgeHandler() {
+    @Override
+    public void handler(String data, ValueCallback<String> valueCallback) {
+        valueCallback.onReceiveValue("");
+    }
+});
+
+//调用方法
+viewClient.callHandler("functionInJs", "data from Java", new ValueCallback<String>() {
+    @Override
+    public void onReceiveValue(String data) {
+        // TODO Auto-generated method stub
+        Log.i("zyh", "reponse data from js " + data);
+    }
+});
+```
+
 ## 混淆
 
 内部已经内置了混淆，所以不需要添加任何混淆
