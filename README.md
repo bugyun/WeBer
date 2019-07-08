@@ -299,11 +299,15 @@ dependencies {
 继承 WeBerViewBridgeClient 类
 ```java
 private class TestWeBerViewClient extends WeBerViewBridgeClient {
+    public TestWeBerViewClient(WeBerView weBerView) {
+        super(weBerView);
+    }
+
     ...
 }
 
-TestWeBerViewClient viewClient = new TestWeBerViewClient(mWeBerView);
 mWeBerView.setWebViewClient(viewClient);
+TestWeBerViewClient viewClient = new TestWeBerViewClient(mWeBerView);
 
 //注册方法
 viewClient.registerHandler("submitFromWeb", new BridgeHandler() {
