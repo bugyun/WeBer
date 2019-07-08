@@ -32,6 +32,7 @@ public class WeberActivity extends AppCompatActivity {
 
     private final String fileUrl = "file:///android_asset/webpage/fileChooser.html";
     private final String videoUrl = "file:///android_asset/webpage/fullscreenVideo.html";
+    private final String jsbridgeUrl = "file:///android_asset/webpage/jsbridge.html";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,19 +45,37 @@ public class WeberActivity extends AppCompatActivity {
 
         viewClient = new TestWeBerViewClient(mWeBerView);
 
-        viewClient.registerHandler("", new BridgeHandler() {
+        viewClient.registerHandler("submitFromWeb", new BridgeHandler() {
             @Override
             public void handler(String data, ValueCallback<String> valueCallback) {
-                valueCallback.onReceiveValue("");
+                Log.i("zyh", "handler = submitFromWeb, data from web = " + data);
+                valueCallback.onReceiveValue("submitFromWeb exe, response data 中文 from Java");
             }
         });
 
-        viewClient.callHandler("functionInJs", "data from Java", new ValueCallback<String>() {
+
+//        User user = new User();
+//        Location location = new Location();
+//        location.address = "SDU";
+//        user.location = location;
+//        user.name = "大头鬼";
+//
+//        viewClient.callHandler("functionInJs", new Gson().toJson(user), new ValueCallback<String>() {
+//            @Override
+//            public void onReceiveValue(String data) {
+//                // TODO Auto-generated method stub
+//                Log.i("zyh", "reponse data from js " + data);
+//            }
+//        });
+
+        viewClient.callHandler("functionInJs", "data from Java1111", new ValueCallback<String>() {
+
             @Override
             public void onReceiveValue(String data) {
                 // TODO Auto-generated method stub
                 Log.i("zyh", "reponse data from js " + data);
             }
+
         });
 
         mWeBerView.setWebChromeClient(chromeClient);
@@ -80,13 +99,19 @@ public class WeberActivity extends AppCompatActivity {
         long time = System.currentTimeMillis();
 //        mWeBerView.loadUrl(WeBerHelper.debugTBSUrl);
 //        mWeBerView.loadUrl(fileUrl);
-        mWeBerView.loadUrl(videoUrl);
+        mWeBerView.loadUrl(jsbridgeUrl);
         TbsLog.d("time-cost", "cost time: " + (System.currentTimeMillis() - time));
         CookieSyncManager.createInstance(this);
-        CookieSyncManager.getInstance().sync();
+        CookieSyncManager.getInstance().
 
-        mWeBerView.getView().setOverScrollMode(View.OVER_SCROLL_ALWAYS);
-        mWeBerView.addJavascriptInterface(new WebViewJavaScriptFunction(), "Android");
+                sync();
+
+        mWeBerView.getView().
+
+                setOverScrollMode(View.OVER_SCROLL_ALWAYS);
+        mWeBerView.addJavascriptInterface(new
+
+                WebViewJavaScriptFunction(), "Android");
 
     }
 
@@ -228,5 +253,15 @@ public class WeberActivity extends AppCompatActivity {
 //                }
 
         }
+    }
+
+    static class User {
+        String name;
+        Location location;
+        String testStr;
+    }
+
+    static class Location {
+        String address;
     }
 }

@@ -30,6 +30,8 @@ import vip.ruoyun.webkit.x5.WeBerViewClient;
  */
 public class WeBerViewBridgeClient extends WeBerViewClient implements WebViewJavascriptBridge {
 
+    private final String TAG = "WeBerViewBridgeClient";
+    private static final String toLoadJs = "WeBerViewJsBridge.js";
 
     private WeBerView weBerView;
 
@@ -37,24 +39,11 @@ public class WeBerViewBridgeClient extends WeBerViewClient implements WebViewJav
         this.weBerView = weBerView;
     }
 
-    private final String TAG = "WeBerViewBridgeClient";
-    private static final String toLoadJs = "WeBerViewJsBridge.js";
     private Map<String, ValueCallback<String>> responseCallbacks = new HashMap<>();
     private Map<String, BridgeHandler> messageHandlers = new HashMap<>();
     private BridgeHandler defaultHandler = new DefaultHandler();
     private Handler mainHandler = new Handler(Looper.myLooper());
-
-
-    private List<Message> startupMessage = new ArrayList<Message>();
-
-    public List<Message> getStartupMessage() {
-        return startupMessage;
-    }
-
-    public void setStartupMessage(List<Message> startupMessage) {
-        this.startupMessage = startupMessage;
-    }
-
+    private List<Message> startupMessage = new ArrayList<>();
     private long uniqueId = 0;
 
     /**
@@ -68,16 +57,15 @@ public class WeBerViewBridgeClient extends WeBerViewClient implements WebViewJav
     /**
      * 获取到CallBackFunction data执行调用并且从数据集移除
      *
-     * @param url
+     * @param url url
      */
-    void handlerReturnData(String url) {
+    private void handlerReturnData(String url) {
         String functionName = BridgeUtil.getFunctionFromReturnUrl(url);
         ValueCallback<String> f = responseCallbacks.get(functionName);
         String data = BridgeUtil.getDataFromReturnUrl(url);
         if (f != null) {
             f.onReceiveValue(data);
             responseCallbacks.remove(functionName);
-            return;
         }
     }
 
@@ -133,7 +121,7 @@ public class WeBerViewBridgeClient extends WeBerViewClient implements WebViewJav
      *
      * @param m Message
      */
-    void dispatchMessage(Message m) {
+    private void dispatchMessage(Message m) {
         String messageJson = m.toJson();
         //escape special characters for json string  为json字符串转义特殊字符
         messageJson = messageJson.replaceAll("(\\\\)([^utrn])", "\\\\\\\\$1$2");
@@ -159,14 +147,14 @@ public class WeBerViewBridgeClient extends WeBerViewClient implements WebViewJav
     /**
      * 刷新消息队列
      */
-    void flushMessageQueue() {
+    private void flushMessageQueue() {
         if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
             loadUrl(BridgeUtil.JS_FETCH_QUEUE_FROM_JAVA, new ValueCallback<String>() {
 
                 @Override
                 public void onReceiveValue(String data) {
                     // deserializeMessage 反序列化消息
-                    List<Message> list = null;
+                    List<Message> list;
                     try {
                         list = Message.toArrayList(data);
                     } catch (Exception e) {
@@ -183,10 +171,12 @@ public class WeBerViewBridgeClient extends WeBerViewClient implements WebViewJav
                         if (!TextUtils.isEmpty(responseId)) {
                             ValueCallback<String> function = responseCallbacks.get(responseId);
                             String responseData = m.getResponseData();
-                            function.onReceiveValue(responseData);
+                            if (function != null) {
+                                function.onReceiveValue(responseData);
+                            }
                             responseCallbacks.remove(responseId);
                         } else {
-                            ValueCallback<String> responseFunction = null;
+                            ValueCallback<String> responseFunction;
                             // if had callbackId 如果有回调Id
                             final String callbackId = m.getCallbackId();
                             if (!TextUtils.isEmpty(callbackId)) {
@@ -225,10 +215,10 @@ public class WeBerViewBridgeClient extends WeBerViewClient implements WebViewJav
     }
 
 
-    public void loadUrl(String jsUrl, ValueCallback<String> returnCallback) {
-        weBerView.loadUrl(jsUrl);
-        // 添加至 Map<String, CallBackFunction>
+    private void loadUrl(String jsUrl, ValueCallback<String> returnCallback) {
         responseCallbacks.put(BridgeUtil.parseFunctionName(jsUrl), returnCallback);
+        // 添加至 Map<String, CallBackFunction>
+        weBerView.loadUrl(jsUrl);
     }
 
     /**
@@ -248,7 +238,7 @@ public class WeBerViewBridgeClient extends WeBerViewClient implements WebViewJav
     /**
      * unregister handler
      *
-     * @param handlerName
+     * @param handlerName 取消名称
      */
     public void unregisterHandler(String handlerName) {
         if (handlerName != null) {
@@ -284,7 +274,7 @@ public class WeBerViewBridgeClient extends WeBerViewClient implements WebViewJav
             flushMessageQueue();
             return true;
         } else {
-            return this.onCustomShouldOverrideUrlLoading(url) ? true : super.shouldOverrideUrlLoading(view, url);
+            return this.onCustomShouldOverrideUrlLoading(url) || super.shouldOverrideUrlLoading(view, url);
         }
     }
 
@@ -306,7 +296,7 @@ public class WeBerViewBridgeClient extends WeBerViewClient implements WebViewJav
                 flushMessageQueue();
                 return true;
             } else {
-                return this.onCustomShouldOverrideUrlLoading(url) ? true : super.shouldOverrideUrlLoading(view, request);
+                return this.onCustomShouldOverrideUrlLoading(url) || super.shouldOverrideUrlLoading(view, request);
             }
         } else {
             return super.shouldOverrideUrlLoading(view, request);
@@ -325,15 +315,15 @@ public class WeBerViewBridgeClient extends WeBerViewClient implements WebViewJav
         BridgeUtil.webViewLoadLocalJs(view, toLoadJs);
 
         //
-        if (getStartupMessage() != null) {
-            for (Message m : getStartupMessage()) {
+        if (startupMessage != null) {
+            for (Message m : startupMessage) {
                 dispatchMessage(m);
             }
-            setStartupMessage(null);
+            startupMessage = null;
         }
 
         //
-        onCustomPageFinishd(view, url);
+        onCustomPageFinished(view, url);
 
     }
 
@@ -343,7 +333,7 @@ public class WeBerViewBridgeClient extends WeBerViewClient implements WebViewJav
     }
 
 
-    protected void onCustomPageFinishd(WebView view, String url) {
+    protected void onCustomPageFinished(WebView view, String url) {
 
     }
 
