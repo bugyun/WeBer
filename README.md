@@ -30,14 +30,14 @@ buildscript {
     repositories {
         ...
         jcenter()
-        maven { url "https://dl.bintray.com/bugyun/maven" } //我的仓库,如果 jcenter 能找到，就不要添加
+        //maven { url "https://dl.bintray.com/bugyun/maven" } //我的仓库,如果 jcenter 能找到，就不要添加
     }
 }
 allprojects {
     repositories {
         ...
         jcenter()
-        maven { url "https://dl.bintray.com/bugyun/maven" } //我的仓库,如果 jcenter 能找到，就不要添加
+        //maven { url "https://dl.bintray.com/bugyun/maven" } //我的仓库,如果 jcenter 能找到，就不要添加
     }
 }
 ```
@@ -287,7 +287,7 @@ public class WeberActivity extends AppCompatActivity {
 ```
 
 ## JSBridge
-如果你的项目使用了 https://github.com/lzyzsd/JsBridge 开源库，那么现在可以使用本库的 JSBridge 来进行兼容。
+如果你的项目使用了 https://github.com/lzyzsd/JsBridge 开源库，那么现在可以替换成本库的 JSBridge 来进行兼容。
 
 使用
 ```
