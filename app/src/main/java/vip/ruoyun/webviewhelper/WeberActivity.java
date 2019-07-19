@@ -1,9 +1,8 @@
 package vip.ruoyun.webviewhelper;
 
-import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -26,7 +25,7 @@ import vip.ruoyun.webkit.x5.jsbridge.WeBerViewBridgeClient;
 
 public class WeberActivity extends AppCompatActivity {
 
-    private TestWeBerChromeClient chromeClient = new TestWeBerChromeClient();
+    private TestWeBerChromeClient chromeClient = new TestWeBerChromeClient(this);
     private TestWeBerViewClient viewClient;
     private WeBerView mWeBerView;
 
@@ -90,29 +89,22 @@ public class WeberActivity extends AppCompatActivity {
                 }
             }
         });
-        chromeClient.setFileChooserListener(new WeBerChromeClient.FileChooserListener() {
-            @Override
-            public void onShowFileChooser(Intent intent, int requestCode) {
-                startActivityForResult(intent, requestCode);
-            }
-        });
+//        chromeClient.setFileChooserListener(new WeBerChromeClient.FileChooserListener() {
+//            @Override
+//            public void onShowFileChooser(Intent intent, int requestCode) {
+//                startActivityForResult(intent, requestCode);
+//            }
+//        });
         long time = System.currentTimeMillis();
 //        mWeBerView.loadUrl(WeBerHelper.debugTBSUrl);
-//        mWeBerView.loadUrl(fileUrl);
-        mWeBerView.loadUrl(jsbridgeUrl);
+        mWeBerView.loadUrl(fileUrl);
+//        mWeBerView.loadUrl(jsbridgeUrl);
         TbsLog.d("time-cost", "cost time: " + (System.currentTimeMillis() - time));
         CookieSyncManager.createInstance(this);
-        CookieSyncManager.getInstance().
+        CookieSyncManager.getInstance().sync();
 
-                sync();
-
-        mWeBerView.getView().
-
-                setOverScrollMode(View.OVER_SCROLL_ALWAYS);
-        mWeBerView.addJavascriptInterface(new
-
-                WebViewJavaScriptFunction(), "Android");
-
+        mWeBerView.getView().setOverScrollMode(View.OVER_SCROLL_ALWAYS);
+        mWeBerView.addJavascriptInterface(new WebViewJavaScriptFunction(), "Android");
     }
 
     private class WebViewJavaScriptFunction {
@@ -138,11 +130,11 @@ public class WeberActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        chromeClient.onActivityResult(requestCode, resultCode, data);
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        chromeClient.onActivityResult(requestCode, resultCode, data);
+//    }
 
     /**
      * 激活WebView为活跃状态，能正常执行网页的响应
@@ -198,6 +190,11 @@ public class WeberActivity extends AppCompatActivity {
     }
 
     private class TestWeBerChromeClient extends WeBerChromeClient {
+
+        public TestWeBerChromeClient(FragmentActivity fragmentActivity) {
+            super(fragmentActivity);
+        }
+
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
             if (newProgress == 100) {

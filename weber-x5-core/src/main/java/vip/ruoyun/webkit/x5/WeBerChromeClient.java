@@ -6,11 +6,14 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 
 import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
+
+import vip.ruoyun.helper.avoid.AvoidOnResultHelper;
 
 /**
  * Created by ruoyun on 2019-07-02.
@@ -18,12 +21,17 @@ import com.tencent.smtt.sdk.WebView;
  * Mail:zyhdvlp@gmail.com
  * Depiction:
  */
-public class WeBerChromeClient extends WebChromeClient {
+public class WeBerChromeClient extends WebChromeClient implements AvoidOnResultHelper.ActivityCallback {
 
     private ValueCallback<Uri> uploadFile;
     private ValueCallback<Uri[]> uploadFiles;
     private final static int FILE_CHOOSER_RESULT_CODE = 10000;
     private FileChooserListener fileChooserListener;
+    private FragmentActivity fragmentActivity;
+
+    public WeBerChromeClient(FragmentActivity fragmentActivity) {
+        this.fragmentActivity = fragmentActivity;
+    }
 
     public interface FileChooserListener {
         void onShowFileChooser(Intent intent, int requestCode);
@@ -84,19 +92,27 @@ public class WeBerChromeClient extends WebChromeClient {
      * @param acceptType 类型
      */
     private void openFileChooseProcess(String[] acceptType) {
-        if (fileChooserListener != null) {
-            StringBuilder typeBuilder = new StringBuilder();
-            for (int i = 0; i < acceptType.length; i++) {
-                typeBuilder.append(acceptType[i]);
-                if (i < acceptType.length - 1) {
-                    typeBuilder.append(";");
-                }
+        StringBuilder typeBuilder = new StringBuilder();
+        for (int i = 0; i < acceptType.length; i++) {
+            typeBuilder.append(acceptType[i]);
+            if (i < acceptType.length - 1) {
+                typeBuilder.append(";");
             }
-            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-            i.addCategory(Intent.CATEGORY_OPENABLE);
-            i.setType(typeBuilder.toString());
-            fileChooserListener.onShowFileChooser(Intent.createChooser(i, "File Chooser"), FILE_CHOOSER_RESULT_CODE);
         }
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType(typeBuilder.toString());
+        Intent intent = Intent.createChooser(i, "File Chooser");
+        if (fileChooserListener != null) {
+            fileChooserListener.onShowFileChooser(intent, FILE_CHOOSER_RESULT_CODE);
+        } else {
+            AvoidOnResultHelper.startActivityForResult(fragmentActivity, intent, this);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int resultCode, Intent data) {
+        onActivityResult(FILE_CHOOSER_RESULT_CODE, resultCode, data);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -112,7 +128,6 @@ public class WeBerChromeClient extends WebChromeClient {
             }
         }
     }
-
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void onActivityResultAboveL(int requestCode, int resultCode, Intent intent) {
