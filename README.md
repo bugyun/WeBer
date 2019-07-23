@@ -286,6 +286,12 @@ public class WeberActivity extends AppCompatActivity {
 }
 ```
 
+## 混淆
+
+内部已经内置了混淆，所以不需要添加任何混淆
+
+---
+
 ## JSBridge
 如果你的项目使用了 https://github.com/lzyzsd/JsBridge 开源库，那么现在可以替换成本库的 JSBridge 来进行兼容。
 
