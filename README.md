@@ -10,6 +10,7 @@ x5内核现在只提供了 v7a 的 so 库，所以如果要使用的话，请在
 ```java
 android {
     compileSdkVersion 28
+    minSdkVersion 15 //x5 要求最低版本
     defaultConfig {
         ndk {
             abiFilters "armeabi-v7a"
