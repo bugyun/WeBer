@@ -4,7 +4,7 @@ Android x5 内核 WebView 的 Helper
 
 ## 使用方法
 
-基于 x5 版本：43697
+基于 x5 版本：43697,更新日期：2019-08-08
 
 x5内核现在只提供了 v7a 的 so 库，所以如果要使用的话，请在 主 build.gradle 中添加如下配置。
 ```java
@@ -111,7 +111,7 @@ class TestWeBerChromeClient extends WeBerChromeClient {
     ...
 }
 
-TestWeBerChromeClient  chromeClient = new TestWeBerChromeClient();
+TestWeBerChromeClient  chromeClient = new TestWeBerChromeClient(this);
 
 //可选操作
 chromeClient.setFileChooserIntercept(new WeBerChromeClient.FileChooserIntercept() {
@@ -316,7 +316,7 @@ public class WeberActivity extends AppCompatActivity {
 ---
 
 ## JSBridge
-如果你的项目使用了 https://github.com/lzyzsd/JsBridge 开源库，那么现在可以替换成本库的 JSBridge 来进行兼容。
+如果你的项目使用了 https://github.com/lzyzsd/JsBridge (1.0.4版本)开源库，,那么现在可以替换成本库的 JSBridge 来进行兼容。
 
 使用
 ```
