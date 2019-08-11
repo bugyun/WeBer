@@ -25,20 +25,19 @@ public class WeBerChromeClient extends WebChromeClient implements AvoidOnResultH
 
     private ValueCallback<Uri> uploadFile;
     private ValueCallback<Uri[]> uploadFiles;
-    private final static int FILE_CHOOSER_RESULT_CODE = 10000;
-    private FileChooserListener fileChooserListener;
+    private FileChooserIntercept fileChooserIntercept;
     private FragmentActivity fragmentActivity;
 
     public WeBerChromeClient(FragmentActivity fragmentActivity) {
         this.fragmentActivity = fragmentActivity;
     }
 
-    public interface FileChooserListener {
-        void onShowFileChooser(Intent intent, int requestCode);
+    public interface FileChooserIntercept {
+        void onFileChooserIntercept(Intent intent);
     }
 
-    public void setFileChooserListener(FileChooserListener fileChooserListener) {
-        this.fileChooserListener = fileChooserListener;
+    public void setFileChooserIntercept(FileChooserIntercept fileChooserIntercept) {
+        this.fileChooserIntercept = fileChooserIntercept;
     }
 
     // For Android < 3.0
@@ -103,35 +102,28 @@ public class WeBerChromeClient extends WebChromeClient implements AvoidOnResultH
         i.addCategory(Intent.CATEGORY_OPENABLE);
         i.setType(typeBuilder.toString());
         Intent intent = Intent.createChooser(i, "File Chooser");
-        if (fileChooserListener != null) {
-            fileChooserListener.onShowFileChooser(intent, FILE_CHOOSER_RESULT_CODE);
-        } else {
-            AvoidOnResultHelper.startActivityForResult(fragmentActivity, intent, this);
+        if (fileChooserIntercept != null) {
+            fileChooserIntercept.onFileChooserIntercept(intent);
         }
+        AvoidOnResultHelper.startActivityForResult(fragmentActivity, intent, this);
     }
 
     @Override
     public void onActivityResult(int resultCode, Intent data) {
-        onActivityResult(FILE_CHOOSER_RESULT_CODE, resultCode, data);
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == FILE_CHOOSER_RESULT_CODE) {
-            if (null == uploadFile && null == uploadFiles)
-                return;
-            Uri result = data == null || resultCode != Activity.RESULT_OK ? null : data.getData();
-            if (uploadFiles != null) {
-                onActivityResultAboveL(requestCode, resultCode, data);
-            } else if (uploadFile != null) {
-                uploadFile.onReceiveValue(result);
-                uploadFile = null;
-            }
+        if (null == uploadFile && null == uploadFiles)
+            return;
+        Uri result = data == null || resultCode != Activity.RESULT_OK ? null : data.getData();
+        if (uploadFiles != null) {
+            onActivityResultAboveL(resultCode, data);
+        } else if (uploadFile != null) {
+            uploadFile.onReceiveValue(result);
+            uploadFile = null;
         }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void onActivityResultAboveL(int requestCode, int resultCode, Intent intent) {
-        if (requestCode != FILE_CHOOSER_RESULT_CODE || uploadFiles == null)
+    private void onActivityResultAboveL(int resultCode, Intent intent) {
+        if (uploadFiles == null)
             return;
         Uri[] results = null;
         if (resultCode == Activity.RESULT_OK) {
