@@ -2,11 +2,11 @@ package vip.ruoyun.webkit.x5;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.tencent.smtt.export.external.TbsCoreSettings;
 import com.tencent.smtt.sdk.QbSdk;
-import com.tencent.smtt.sdk.TbsListener;
 import com.tencent.smtt.sdk.TbsVideo;
 import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebView;
@@ -42,8 +42,23 @@ public class WeBerHelper {
 //        map.put(TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE, false);
 //        QbSdk.initTbsSettings(map);
 //    }
-    public static void init(Context context) {
-        init(context, null);
+    public static void init(@NonNull Context context) {
+        QbSdk.initX5Environment(context.getApplicationContext(), null); //x5内核初始化接口
+    }
+
+    public interface Interceptor {
+        void beforeInit();
+    }
+
+    /**
+     * 初始化,在拦截器中添加配置
+     *
+     * @param context
+     * @param interceptor
+     */
+    public static void init(@NonNull Context context, @NonNull Interceptor interceptor) {
+        interceptor.beforeInit();
+        QbSdk.initX5Environment(context.getApplicationContext(), null); //x5内核初始化接口
     }
 
     /**
@@ -52,42 +67,13 @@ public class WeBerHelper {
      *
      * @param context
      */
-    public static void init(Context context, QbSdk.PreInitCallback preInitCallback) {
-//        QbSdk.setDownloadWithoutWifi(true);
-        if (null == preInitCallback) {
-            preInitCallback = new QbSdk.PreInitCallback() {
-                @Override
-                public void onViewInitFinished(boolean isSuccess) {//x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
-                    Log.d("app", " onViewInitFinished is " + isSuccess);
-                    if (!isSuccess) { //如果onViewInitFinished false,内核会尝试安装，你可以通过下面监听接口获知
+    public static void init(@NonNull Context context, @NonNull QbSdk.PreInitCallback preInitCallback) {
+        QbSdk.initX5Environment(context.getApplicationContext(), preInitCallback);//x5内核初始化接口
+    }
 
-                    }
-                }
-
-                @Override
-                public void onCoreInitFinished() {
-
-                }
-            };
-            QbSdk.setTbsListener(new TbsListener() {
-                @Override
-                public void onDownloadFinish(int i) {
-                    //tbs内核下载完成回调
-                }
-
-                @Override
-                public void onInstallFinish(int i) {
-                    //内核安装完成回调，
-                }
-
-                @Override
-                public void onDownloadProgress(int i) {
-                    //下载进度监听
-                }
-            });
-        }
-        //x5内核初始化接口
-        QbSdk.initX5Environment(context.getApplicationContext(), preInitCallback);
+    public static void init(@NonNull Context context, @NonNull QbSdk.PreInitCallback preInitCallback, @NonNull Interceptor interceptor) {
+        interceptor.beforeInit();
+        QbSdk.initX5Environment(context.getApplicationContext(), preInitCallback);//x5内核初始化接口
     }
 
 

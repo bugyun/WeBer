@@ -4,10 +4,13 @@ Android x5 内核 WebView 的 Helper
 
 ## 使用方法
 
+基于 x5 版本：43697,更新日期：2019-08-08
+
 x5内核现在只提供了 v7a 的 so 库，所以如果要使用的话，请在 主 build.gradle 中添加如下配置。
 ```java
 android {
     compileSdkVersion 28
+    minSdkVersion 15 //x5 要求最低版本
     defaultConfig {
         ndk {
             abiFilters "armeabi-v7a"
@@ -16,29 +19,11 @@ android {
 }
 ```
 
-在子项目中的 build.gradle 文件中添加
+jcenter()仓库,在子项目中的 build.gradle 文件中添加
 
 ```java
 dependencies {
-    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.2'
-}
-```
-
-如果找不到项目，可以在根 build.gradle 中添加如下配置
-```java
-buildscript {
-    repositories {
-        ...
-        jcenter()
-        //maven { url "https://dl.bintray.com/bugyun/maven" } //我的仓库,如果 jcenter 能找到，就不要添加
-    }
-}
-allprojects {
-    repositories {
-        ...
-        jcenter()
-        //maven { url "https://dl.bintray.com/bugyun/maven" } //我的仓库,如果 jcenter 能找到，就不要添加
-    }
+    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.3'
 }
 ```
 
@@ -46,8 +31,9 @@ allprojects {
 
 Application中进行初始化
 ```java
-WeBerHelper.init(context);
+WeBerHelper.init(context);//简单的初始化
 ```
+
 播放视频,context参数只能是 activity 类型的 context，不能设置为 Application 的 context。
 ```java
 WeBerHelper.playVideo(context,videoUrl);
@@ -59,6 +45,57 @@ WeBerHelper.playVideo(Context context, String videoUrl, Bundle extraData);
 WeBerHelper.openFile(Context context, String filePath, HashMap<String, String> params,ValueCallback<Boolean> valueCallback);
 ```
 
+## 初始化
+
+可选,接⼊TBS SDK后，解决⾸次启动卡顿问题
+```java
+WeBerHelper.multiProcessOptimize();
+//然后执行初始化操作
+WeBerHelper.init(context);
+```
+在初始化之前做一些配置
+```java
+WeBerHelper.init(this, new WeBerHelper.Interceptor() {
+    @Override
+    public void beforeInit() {//在初始化之前做一些配置
+        QbSdk.setDownloadWithoutWifi(true);
+        QbSdk.setTbsListener(new TbsListener() {
+            @Override
+            public void onDownloadFinish(int i) {
+                //tbs内核下载完成回调
+            }
+
+            @Override
+            public void onInstallFinish(int i) {
+                //内核安装完成回调，
+            }
+
+            @Override
+            public void onDownloadProgress(int i) {
+                //下载进度监听
+            }
+        });
+    }
+});
+```
+
+添加x5加载回调方法
+```java
+WeBerHelper.init(this,new QbSdk.PreInitCallback(){
+
+    @Override
+    public void onCoreInitFinished() {
+
+    }
+
+    @Override
+    public void onViewInitFinished(boolean b) {
+
+    }
+});
+```
+
+
 ## WeBerChromeClient
 
 需要继承 WeBerChromeClient,可以添加文件的监听器。
@@ -69,28 +106,21 @@ WeBerHelper.openFile(Context context, String filePath, HashMap<String, String> p
 //multiple="multiple" : 只能支持单文件，所以设置multiple无效
 //accept="image/*" : 如果不传，默认所有文件类型
 ```
-
+不需要在 onActivityResult 事件中添加回调,使用 https://github.com/bugyun/AvoidOnResultHelper 优化回调.
 ```java
-
 class TestWeBerChromeClient extends WeBerChromeClient {
     ...
 }
 
-TestWeBerChromeClient  chromeClient = new TestWeBerChromeClient();
+TestWeBerChromeClient  chromeClient = new TestWeBerChromeClient(this);
 
-chromeClient.setFileChooserListener(new WeBerChromeClient.FileChooserListener() {
+//可选操作
+chromeClient.setFileChooserIntercept(new WeBerChromeClient.FileChooserIntercept() {
     @Override
-    public void onShowFileChooser(Intent intent, int requestCode) {
-        startActivityForResult(intent, requestCode);
+    public void onFileChooserIntercept(Intent intent) {
+        //在打开文件之前,处理 intent ,修改或者添加参数
     }
 });
-
-//需要在 onActivityResult 事件中添加如下方法
-@Override
-protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    chromeClient.onActivityResult(requestCode, resultCode, data);
-}
 ```
 
 ## WeBerViewClient
@@ -162,10 +192,10 @@ public class WeberActivity extends AppCompatActivity {
                 //失败显示失败界面
             }
         });
-        chromeClient.setFileChooserListener(new WeBerChromeClient.FileChooserListener() {
+        chromeClient.setFileChooserIntercept(new WeBerChromeClient.FileChooserIntercept() {
             @Override
-            public void onShowFileChooser(Intent intent, int requestCode) {
-                startActivityForResult(intent, requestCode);
+            public void onFileChooserIntercept(Intent intent) {
+                //在打开文件之前,处理 intent ,修改或者添加参数
             }
         });
         long time = System.currentTimeMillis();
@@ -173,12 +203,6 @@ public class WeberActivity extends AppCompatActivity {
         TbsLog.d("time-cost", "cost time: " + (System.currentTimeMillis() - time));
         CookieSyncManager.createInstance(this);
         CookieSyncManager.getInstance().sync();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        chromeClient.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
@@ -293,7 +317,7 @@ public class WeberActivity extends AppCompatActivity {
 ---
 
 ## JSBridge
-如果你的项目使用了 https://github.com/lzyzsd/JsBridge 开源库，那么现在可以替换成本库的 JSBridge 来进行兼容。
+如果你的项目使用了 https://github.com/lzyzsd/JsBridge (1.0.4版本)开源库，,那么现在可以替换成本库的 JSBridge 来进行兼容。
 
 使用
 ```

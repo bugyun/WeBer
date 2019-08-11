@@ -1,5 +1,6 @@
 package vip.ruoyun.webviewhelper;
 
+import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -89,12 +90,12 @@ public class WeberActivity extends AppCompatActivity {
                 }
             }
         });
-//        chromeClient.setFileChooserListener(new WeBerChromeClient.FileChooserListener() {
-//            @Override
-//            public void onShowFileChooser(Intent intent, int requestCode) {
-//                startActivityForResult(intent, requestCode);
-//            }
-//        });
+        chromeClient.setFileChooserIntercept(new WeBerChromeClient.FileChooserIntercept() {
+            @Override
+            public void onFileChooserIntercept(Intent intent) {
+                //处理 intent ,修改或者添加参数
+            }
+        });
         long time = System.currentTimeMillis();
 //        mWeBerView.loadUrl(WeBerHelper.debugTBSUrl);
         mWeBerView.loadUrl(fileUrl);
