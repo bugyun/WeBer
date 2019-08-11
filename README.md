@@ -105,7 +105,7 @@ WeBerHelper.init(this,new QbSdk.PreInitCallback(){
 //multiple="multiple" : 只能支持单文件，所以设置multiple无效
 //accept="image/*" : 如果不传，默认所有文件类型
 ```
-不需要在 onActivityResult 事件中添加回调
+不需要在 onActivityResult 事件中添加回调,使用 https://github.com/bugyun/AvoidOnResultHelper 优化回调.
 ```java
 class TestWeBerChromeClient extends WeBerChromeClient {
     ...
