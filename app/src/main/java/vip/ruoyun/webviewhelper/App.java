@@ -13,7 +13,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         WeBerHelper.multiProcessOptimize();
-        WeBerHelper.init(this);
+//        WeBerHelper.init(this);
 
         WeBerHelper.init(this, new WeBerHelper.Interceptor() {
             @Override
@@ -37,17 +37,17 @@ public class App extends Application {
                 });
             }
         });
-        WeBerHelper.init(this,new QbSdk.PreInitCallback(){
-
-            @Override
-            public void onCoreInitFinished() {
-
-            }
-
-            @Override
-            public void onViewInitFinished(boolean b) {
-
-            }
-        });
+//        WeBerHelper.init(this,new QbSdk.PreInitCallback(){
+//
+//            @Override
+//            public void onCoreInitFinished() {
+//
+//            }
+//
+//            @Override
+//            public void onViewInitFinished(boolean b) {
+//
+//            }
+//        });
     }
 }
