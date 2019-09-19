@@ -77,6 +77,11 @@ WeBerHelper.init(this, new WeBerHelper.Interceptor() {
         });
     }
 });
+
+//得到错误信息，当客户端 crash 的时候,可以在bugly上设置crash 并上传
+//map.put("x5crashInfo", x5CrashInfo);
+String crashMessage = WeBerHelper.getCrashMessage(this);
+
 ```
 
 添加x5加载回调方法
