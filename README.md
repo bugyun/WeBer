@@ -23,7 +23,7 @@ jcenter()仓库,在子项目中的 build.gradle 文件中添加
 
 ```java
 dependencies {
-    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.3'
+    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.4'
 }
 ```
 
@@ -110,11 +110,13 @@ WeBerHelper.init(this,new QbSdk.PreInitCallback(){
 <input class="filechooser" id="file_chooser" type="file" placeholder="file path">
 ```
 #### 注意
+
 - ```multiple="multiple" : 只能支持单文件，所以设置multiple无效```
 - ```accept="video/*" : 打开摄像机功能```
 - ```capture="camera" : 如果有值的话，就会调用照相机功能，优先级大于 accept```
 - ```accept="image/*" : 选择文件,根据设置 image/*图片, */* 所有文件```
 
+如果想要照相功能,请自行申请权限,可以使用 https://github.com/bugyun/MissPermission ,来进行权限的请求.
 
 不需要在 onActivityResult 事件中添加回调,使用 https://github.com/bugyun/AvoidOnResultHelper 优化回调.
 ```java
