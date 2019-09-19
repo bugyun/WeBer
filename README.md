@@ -103,11 +103,14 @@ WeBerHelper.init(this,new QbSdk.PreInitCallback(){
 当 h5 有input 标签的时候，响应事件。可以不设置。
 ```html
 <input class="filechooser" id="file_chooser" type="file" placeholder="file path">
-//multiple="multiple" : 只能支持单文件，所以设置multiple无效
-//accept="image/*" : 如果不传，默认所有文件类型
-//accept="video/*" : 打开摄像机功能
-//capture="camera" : 如果有值的话，就会调用照相机功能，优先级大于 accept
 ```
+#### 注意
+- multiple="multiple" : 只能支持单文件，所以设置multiple无效
+- accept="video/*" : 打开摄像机功能
+- capture="camera" : 如果有值的话，就会调用照相机功能，优先级大于 accept
+- accept="image/*" : 选择文件,根据设置 image/*图片, */* 所有文件
+
+
 不需要在 onActivityResult 事件中添加回调,使用 https://github.com/bugyun/AvoidOnResultHelper 优化回调.
 ```java
 class TestWeBerChromeClient extends WeBerChromeClient {
