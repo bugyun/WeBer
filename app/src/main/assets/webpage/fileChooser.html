@@ -11,6 +11,12 @@
             -webkit-background-clip: border-box;
 
         }
+        .filechooser2{
+            width:95%;
+            height: 50px;
+            -webkit-background-clip: border-box;
+
+        }
     </style>
     <script >
         var display=function (){
@@ -24,7 +30,11 @@
         <li class="listviewItem">
             <fieldset class="itemset">
                 <input class="filechooser" id="file_chooser" type="file" placeholder="file path" onchange="display()" oninput="display()"
-                        accept="image/*" capture="camera"><br>
+                        accept="*/*" ><br>
+
+                <input class="filechooser2" id="file_chooser2" type="file" placeholder="file path" onchange="display()" oninput="display()"
+                       accept="*/*" capture="camera" value="打开相机" ><br>
+<!--                capture="camera"-->
 <!--                multiple="multiple"-->
 
                 <p id="filechooser_display"></p>

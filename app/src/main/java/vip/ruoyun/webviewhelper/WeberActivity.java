@@ -9,14 +9,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
-
 import com.tencent.smtt.export.external.interfaces.SslError;
 import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
 import com.tencent.smtt.sdk.CookieSyncManager;
 import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.utils.TbsLog;
-
 import vip.ruoyun.webkit.x5.WeBerChromeClient;
 import vip.ruoyun.webkit.x5.WeBerView;
 import vip.ruoyun.webkit.x5.WeBerViewClient;
@@ -27,11 +25,15 @@ import vip.ruoyun.webkit.x5.jsbridge.WeBerViewBridgeClient;
 public class WeberActivity extends AppCompatActivity {
 
     private TestWeBerChromeClient chromeClient = new TestWeBerChromeClient(this);
+
     private TestWeBerViewClient viewClient;
+
     private WeBerView mWeBerView;
 
     private final String fileUrl = "file:///android_asset/webpage/fileChooser.html";
+
     private final String videoUrl = "file:///android_asset/webpage/fullscreenVideo.html";
+
     private final String jsbridgeUrl = "file:///android_asset/webpage/jsbridge.html";
 
     @Override
@@ -39,7 +41,6 @@ public class WeberActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weber);
         getWindow().setFormat(PixelFormat.TRANSLUCENT);//这个对宿主没什么影响，建议声明
-
 
         mWeBerView = findViewById(R.id.mWeBerView);
 
@@ -52,7 +53,6 @@ public class WeberActivity extends AppCompatActivity {
                 valueCallback.onReceiveValue("submitFromWeb exe, response data 中文 from Java");
             }
         });
-
 
 //        User user = new User();
 //        Location location = new Location();
@@ -92,9 +92,9 @@ public class WeberActivity extends AppCompatActivity {
         });
         chromeClient.setFileChooserIntercept(new WeBerChromeClient.FileChooserIntercept() {
             @Override
-            public void onFileChooserIntercept(Intent intent) {
+            public void onFileChooserIntercept(boolean isCapture, String[] acceptType, Intent intent) {
+//                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);// 启动系统相机
                 //处理 intent ,修改或者添加参数
-
 //                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
 
 //                Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);//用来打开相机的Intent
@@ -261,12 +261,16 @@ public class WeberActivity extends AppCompatActivity {
     }
 
     static class User {
+
         String name;
+
         Location location;
+
         String testStr;
     }
 
     static class Location {
+
         String address;
     }
 }
