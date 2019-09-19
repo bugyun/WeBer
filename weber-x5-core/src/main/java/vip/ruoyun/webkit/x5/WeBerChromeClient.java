@@ -46,8 +46,9 @@ public class WeBerChromeClient extends WebChromeClient implements AvoidOnResultH
          * @param isCapture  是否是照相功能
          * @param acceptType input标签 acceptType的属性
          * @param intent     意图
+         * @return 是否要拦截
          */
-        void onFileChooserIntercept(boolean isCapture, String[] acceptType, Intent intent);
+        boolean onFileChooserIntercept(boolean isCapture, String[] acceptType, Intent intent);
     }
 
     public void setFileChooserIntercept(FileChooserIntercept fileChooserIntercept) {
@@ -151,7 +152,9 @@ public class WeBerChromeClient extends WebChromeClient implements AvoidOnResultH
                 }
             }
             if (fileChooserIntercept != null) {
-                fileChooserIntercept.onFileChooserIntercept(isCapture, acceptType, intent);
+                if (fileChooserIntercept.onFileChooserIntercept(isCapture, acceptType, intent)) {
+                    return;
+                }
             }
             AvoidOnResultHelper.startActivityForResult(fragmentActivity, intent, this);
         } catch (Exception e) {//当系统没有相机应用的时候该应用会闪退,所以 try catch

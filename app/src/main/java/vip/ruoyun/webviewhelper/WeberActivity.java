@@ -92,15 +92,9 @@ public class WeberActivity extends AppCompatActivity {
         });
         chromeClient.setFileChooserIntercept(new WeBerChromeClient.FileChooserIntercept() {
             @Override
-            public void onFileChooserIntercept(boolean isCapture, String[] acceptType, Intent intent) {
-//                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);// 启动系统相机
+            public boolean onFileChooserIntercept(boolean isCapture, String[] acceptType, Intent intent) {
                 //处理 intent ,修改或者添加参数
-//                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-
-//                Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);//用来打开相机的Intent
-//                if(takePhotoIntent.resolveActivity(getPackageManager())!=null){//这句作用是如果没有相机则该应用不会闪退，要是不加这句则当系统没有相机应用的时候该应用会闪退
-//                    startActivityForResult(takePhotoIntent,REQ_CODE);//启动相机
-//                }
+                return false;
             }
         });
         long time = System.currentTimeMillis();
