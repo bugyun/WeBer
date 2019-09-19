@@ -3,6 +3,7 @@ package vip.ruoyun.webviewhelper;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -92,15 +93,16 @@ public class WeberActivity extends AppCompatActivity {
         });
         chromeClient.setFileChooserIntercept(new WeBerChromeClient.FileChooserIntercept() {
             @Override
-            public void onFileChooserIntercept(boolean isCapture, String[] acceptType, Intent intent) {
-//                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);// 启动系统相机
+            public boolean onFileChooserIntercept(boolean isCapture, String[] acceptType, Intent intent) {
+                if (MediaStore.ACTION_VIDEO_CAPTURE.equals(intent.getAction())) {//要使用摄像机
+                    //要使用摄像机,判断权限 android.permission.CAMERA
+                    return true;//拦截
+                } else if (MediaStore.ACTION_IMAGE_CAPTURE.equals(intent.getAction())) {//要使用照相机
+                    //要使用照相机,判断权限 android.permission.CAMERA
+                    return true;//拦截
+                }
                 //处理 intent ,修改或者添加参数
-//                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-
-//                Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);//用来打开相机的Intent
-//                if(takePhotoIntent.resolveActivity(getPackageManager())!=null){//这句作用是如果没有相机则该应用不会闪退，要是不加这句则当系统没有相机应用的时候该应用会闪退
-//                    startActivityForResult(takePhotoIntent,REQ_CODE);//启动相机
-//                }
+                return false;
             }
         });
         long time = System.currentTimeMillis();

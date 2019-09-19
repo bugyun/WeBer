@@ -23,7 +23,7 @@ jcenter()仓库,在子项目中的 build.gradle 文件中添加
 
 ```java
 dependencies {
-    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.4'
+    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.5'
 }
 ```
 
@@ -116,8 +116,6 @@ WeBerHelper.init(this,new QbSdk.PreInitCallback(){
 - ```capture="camera" : 如果有值的话，就会调用照相机功能，优先级大于 accept```
 - ```accept="image/*" : 选择文件,根据设置 image/*图片, */* 所有文件```
 
-如果想要照相功能,请自行申请权限,可以使用 https://github.com/bugyun/MissPermission ,来进行权限的请求.
-
 不需要在 onActivityResult 事件中添加回调,使用 https://github.com/bugyun/AvoidOnResultHelper 优化回调.
 ```java
 class TestWeBerChromeClient extends WeBerChromeClient {
@@ -132,11 +130,20 @@ chromeClient.setFileChooserIntercept(new WeBerChromeClient.FileChooserIntercept(
      * @param isCapture  是否是照相功能
      * @param acceptType input标签 acceptType的属性
      * @param intent     意图
+     * @return 是否要拦截, 可根据 intent 来判断是否要进行照相机权限检查,代码如下
      */
     @Override
-    public void onFileChooserIntercept(boolean isCapture,String[] acceptType, Intent intent) {
-        //acceptType 类型
-        //在打开文件之前,处理 intent ,修改或者添加参数
+    public boolean onFileChooserIntercept(boolean isCapture,String[] acceptType, Intent intent) {
+        if (MediaStore.ACTION_VIDEO_CAPTURE.equals(intent.getAction())) {//要使用摄像机
+            //要使用摄像机,判断权限 android.permission.CAMERA
+            //可以使用 https://github.com/bugyun/MissPermission ,来进行权限的请求.
+            return true;//拦截
+        } else if (MediaStore.ACTION_IMAGE_CAPTURE.equals(intent.getAction())) {//要使用照相机
+            //要使用照相机,判断权限 android.permission.CAMERA
+            //可以使用 https://github.com/bugyun/MissPermission ,来进行权限的请求.
+            return true;//拦截
+        }
+        return false;//不拦截
     }
 });
 ```
