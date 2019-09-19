@@ -1,18 +1,18 @@
 package vip.ruoyun.webkit.x5;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.ClipData;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
-
+import android.util.Log;
 import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
-
+import java.io.File;
 import vip.ruoyun.helper.avoid.AvoidOnResultHelper;
 
 /**
@@ -23,17 +23,27 @@ import vip.ruoyun.helper.avoid.AvoidOnResultHelper;
  */
 public class WeBerChromeClient extends WebChromeClient implements AvoidOnResultHelper.ActivityCallback {
 
+    private boolean isCapture;
+
+    private File mVFile;
+
     private ValueCallback<Uri> uploadFile;
+
     private ValueCallback<Uri[]> uploadFiles;
+
     private FileChooserIntercept fileChooserIntercept;
+
     private FragmentActivity fragmentActivity;
+
+    private Uri fileUri;
 
     public WeBerChromeClient(FragmentActivity fragmentActivity) {
         this.fragmentActivity = fragmentActivity;
     }
 
     public interface FileChooserIntercept {
-        void onFileChooserIntercept(Intent intent);
+
+        void onFileChooserIntercept(String[] acceptType, Intent intent);
     }
 
     public void setFileChooserIntercept(FileChooserIntercept fileChooserIntercept) {
@@ -60,6 +70,7 @@ public class WeBerChromeClient extends WebChromeClient implements AvoidOnResultH
     @Override
     public void openFileChooser(ValueCallback<Uri> valueCallback, String acceptType, String capture) {
         uploadFile = valueCallback;
+        isCapture = !TextUtils.isEmpty(capture);
         if (TextUtils.isEmpty(acceptType)) {
             openFileChooseProcess(new String[]{"*/*"});
         } else {
@@ -69,10 +80,13 @@ public class WeBerChromeClient extends WebChromeClient implements AvoidOnResultH
 
     // For Android >= 5.0
     @Override
-    public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+    public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback,
+            FileChooserParams fileChooserParams) {
         uploadFiles = filePathCallback;
+        isCapture = fileChooserParams.isCaptureEnabled();
         if (fileChooserParams.getAcceptTypes() != null && fileChooserParams.getAcceptTypes().length > 0) {
-            if (fileChooserParams.getAcceptTypes().length == 1 && TextUtils.isEmpty(fileChooserParams.getAcceptTypes()[0])) {
+            if (fileChooserParams.getAcceptTypes().length == 1 && TextUtils
+                    .isEmpty(fileChooserParams.getAcceptTypes()[0])) {
                 openFileChooseProcess(new String[]{"*/*"});
             } else {
                 openFileChooseProcess(fileChooserParams.getAcceptTypes());
@@ -98,50 +112,83 @@ public class WeBerChromeClient extends WebChromeClient implements AvoidOnResultH
                 typeBuilder.append(";");
             }
         }
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.addCategory(Intent.CATEGORY_OPENABLE);
-        i.setType(typeBuilder.toString());
-        Intent intent = Intent.createChooser(i, "File Chooser");
-        if (fileChooserIntercept != null) {
-            fileChooserIntercept.onFileChooserIntercept(intent);
+        String acceptTypeString = typeBuilder.toString();
+        try {
+            Intent intent = new Intent();
+            if (isCapture) {
+                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);// 启动系统相机
+                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                // data/data/[appName]/cache,必须确保文件夹路径存在，否则拍照后无法完成回调
+                mVFile = new File(
+                        fragmentActivity.getCacheDir() + File.separator + "weber",
+                        System.currentTimeMillis() + ".jpg");
+                Log.e("zyh", mVFile.toString());
+                if (!mVFile.getParentFile().exists()) {
+                    mVFile.getParentFile().mkdirs();
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    fileUri = WeBerFileProvider
+                            .getUriForFile(fragmentActivity, fragmentActivity.getPackageName() + ".fileProvider",
+                                    mVFile);
+                } else {
+                    fileUri = Uri.fromFile(mVFile);
+                }
+                Log.e("zyh", fileUri.toString());
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+            } else {
+                if (acceptTypeString.contains("video/")) {//默认打开后置摄像头
+                    intent.setAction(MediaStore.ACTION_VIDEO_CAPTURE);
+                    intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                } else {//图片或者文件
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType(acceptTypeString);
+                    intent = Intent.createChooser(intent, "File Chooser");
+                }
+            }
+            if (fileChooserIntercept != null) {
+                fileChooserIntercept.onFileChooserIntercept(acceptType, intent);
+            }
+            AvoidOnResultHelper.startActivityForResult(fragmentActivity, intent, this);
+        } catch (Exception e) {//当系统没有相机应用的时候该应用会闪退,所以 try catch
+            e.printStackTrace();
+            Log.e("zyh", e.getMessage());
         }
-        AvoidOnResultHelper.startActivityForResult(fragmentActivity, intent, this);
     }
 
     @Override
     public void onActivityResult(int resultCode, Intent data) {
-        if (null == uploadFile && null == uploadFiles)
+        if (null == uploadFile && null == uploadFiles) {
             return;
+        }
         Uri result = data == null || resultCode != Activity.RESULT_OK ? null : data.getData();
+        Uri[] uris = result == null ? null : new Uri[]{result};
+        if (fileUri != null) {
+            afterOpenCamera();
+            result = fileUri;
+            uris = new Uri[]{fileUri};
+        }
         if (uploadFiles != null) {
-            onActivityResultAboveL(resultCode, data);
+            uploadFiles.onReceiveValue(uris);
         } else if (uploadFile != null) {
             uploadFile.onReceiveValue(result);
-            uploadFile = null;
         }
+        uploadFiles = null;
+        uploadFile = null;
+        fileUri = null;
+        mVFile = null;
+        isCapture = false;
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void onActivityResultAboveL(int resultCode, Intent intent) {
-        if (uploadFiles == null)
-            return;
-        Uri[] results = null;
-        if (resultCode == Activity.RESULT_OK) {
-            if (intent != null) {
-                String dataString = intent.getDataString();
-                ClipData clipData = intent.getClipData();
-                if (clipData != null) {
-                    results = new Uri[clipData.getItemCount()];
-                    for (int i = 0; i < clipData.getItemCount(); i++) {
-                        ClipData.Item item = clipData.getItemAt(i);
-                        results[i] = item.getUri();
-                    }
-                }
-                if (dataString != null)
-                    results = new Uri[]{Uri.parse(dataString)};
-            }
-        }
-        uploadFiles.onReceiveValue(results);
-        uploadFiles = null;
+    /**
+     * 解决拍照后在相册中找不到的问题
+     */
+    private void afterOpenCamera() {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.DATA, mVFile.getAbsolutePath());
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        fragmentActivity.getContentResolver().insert(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
     }
 }
