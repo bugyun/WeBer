@@ -117,6 +117,9 @@ WeBerHelper.init(this,new QbSdk.PreInitCallback(){
 - ```accept="image/*" : 选择文件,根据设置 image/*图片, */* 所有文件```
 
 如果想要照相功能,请自行申请权限,可以使用 https://github.com/bugyun/MissPermission ,来进行权限的请求.
+```xml
+<uses-permission android:name="android.permission.CAMERA" />
+```
 
 不需要在 onActivityResult 事件中添加回调,使用 https://github.com/bugyun/AvoidOnResultHelper 优化回调.
 ```java
