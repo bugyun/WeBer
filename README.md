@@ -205,7 +205,7 @@ public class WeberActivity extends AppCompatActivity {
         });
         chromeClient.setFileChooserIntercept(new WeBerChromeClient.FileChooserIntercept() {
             @Override
-            public void onFileChooserIntercept(Intent intent) {
+            public void onFileChooserIntercept(boolean isCapture, String[] acceptType, Intent intent) {
                 //在打开文件之前,处理 intent ,修改或者添加参数
             }
         });
