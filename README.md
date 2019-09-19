@@ -121,8 +121,13 @@ TestWeBerChromeClient  chromeClient = new TestWeBerChromeClient(this);
 
 //可选操作
 chromeClient.setFileChooserIntercept(new WeBerChromeClient.FileChooserIntercept() {
+    /**
+     * @param isCapture  是否是照相功能
+     * @param acceptType input标签 acceptType的属性
+     * @param intent     意图
+     */
     @Override
-    public void onFileChooserIntercept(String[] acceptType, Intent intent) {
+    public void onFileChooserIntercept(boolean isCapture,String[] acceptType, Intent intent) {
         //acceptType 类型
         //在打开文件之前,处理 intent ,修改或者添加参数
     }
