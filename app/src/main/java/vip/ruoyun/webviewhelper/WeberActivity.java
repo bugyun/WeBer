@@ -92,7 +92,7 @@ public class WeberActivity extends AppCompatActivity {
         });
         chromeClient.setFileChooserIntercept(new WeBerChromeClient.FileChooserIntercept() {
             @Override
-            public void onFileChooserIntercept(String[] acceptType, Intent intent) {
+            public void onFileChooserIntercept(boolean isCapture, String[] acceptType, Intent intent) {
 //                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);// 启动系统相机
                 //处理 intent ,修改或者添加参数
 //                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);

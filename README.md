@@ -122,7 +122,8 @@ TestWeBerChromeClient  chromeClient = new TestWeBerChromeClient(this);
 //可选操作
 chromeClient.setFileChooserIntercept(new WeBerChromeClient.FileChooserIntercept() {
     @Override
-    public void onFileChooserIntercept(Intent intent) {
+    public void onFileChooserIntercept(String[] acceptType, Intent intent) {
+        //acceptType 类型
         //在打开文件之前,处理 intent ,修改或者添加参数
     }
 });
