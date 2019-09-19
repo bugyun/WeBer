@@ -135,7 +135,7 @@ chromeClient.setFileChooserIntercept(new WeBerChromeClient.FileChooserIntercept(
      * @param isCapture  是否是照相功能
      * @param acceptType input标签 acceptType的属性
      * @param intent     意图
-     * @return 是否要拦截,可以上面的参数 ,如 isCapture 来判断是否要进行照相机权限检查
+     * @return 是否要拦截,可用上面的参数 ,如 [isCapture 为 ture] 或 [acceptType 是否包含 video]  来判断是否要进行照相机权限检查
      */
     @Override
     public boolean onFileChooserIntercept(boolean isCapture,String[] acceptType, Intent intent) {
