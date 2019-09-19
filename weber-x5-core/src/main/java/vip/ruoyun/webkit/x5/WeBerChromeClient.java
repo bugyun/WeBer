@@ -8,7 +8,6 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
@@ -118,11 +117,11 @@ public class WeBerChromeClient extends WebChromeClient implements AvoidOnResultH
             if (isCapture) {
                 intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);// 启动系统相机
                 intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 // data/data/[appName]/cache,必须确保文件夹路径存在，否则拍照后无法完成回调
                 mVFile = new File(
                         fragmentActivity.getCacheDir() + File.separator + "weber",
                         System.currentTimeMillis() + ".jpg");
-                Log.e("zyh", mVFile.toString());
                 if (!mVFile.getParentFile().exists()) {
                     mVFile.getParentFile().mkdirs();
                 }
@@ -133,7 +132,6 @@ public class WeBerChromeClient extends WebChromeClient implements AvoidOnResultH
                 } else {
                     fileUri = Uri.fromFile(mVFile);
                 }
-                Log.e("zyh", fileUri.toString());
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
             } else {
                 if (acceptTypeString.contains("video/")) {//默认打开后置摄像头
@@ -153,19 +151,23 @@ public class WeBerChromeClient extends WebChromeClient implements AvoidOnResultH
             AvoidOnResultHelper.startActivityForResult(fragmentActivity, intent, this);
         } catch (Exception e) {//当系统没有相机应用的时候该应用会闪退,所以 try catch
             e.printStackTrace();
-            Log.e("zyh", e.getMessage());
         }
     }
 
     @Override
     public void onActivityResult(int resultCode, Intent data) {
         if (null == uploadFile && null == uploadFiles) {
+            uploadFiles = null;
+            uploadFile = null;
+            fileUri = null;
+            mVFile = null;
+            isCapture = false;
             return;
         }
         Uri result = data == null || resultCode != Activity.RESULT_OK ? null : data.getData();
         Uri[] uris = result == null ? null : new Uri[]{result};
         if (fileUri != null) {
-            afterOpenCamera();
+//            afterOpenCamera();
             result = fileUri;
             uris = new Uri[]{fileUri};
         }
@@ -185,10 +187,16 @@ public class WeBerChromeClient extends WebChromeClient implements AvoidOnResultH
      * 解决拍照后在相册中找不到的问题
      */
     private void afterOpenCamera() {
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.DATA, mVFile.getAbsolutePath());
+        ContentValues values = new ContentValues(9);
+        values.put(MediaStore.Images.Media.TITLE, "Camera");
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, mVFile.getName());
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-        fragmentActivity.getContentResolver().insert(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        values.put(MediaStore.Images.Media.ORIENTATION, 0);
+        values.put(MediaStore.Images.Media.DATA, mVFile.getAbsolutePath());
+        values.put(MediaStore.Images.Media.SIZE, mVFile.length());
+        Uri uri = fragmentActivity.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        // 通知相册更新
+        fragmentActivity.sendBroadcast(new Intent("com.android.camera.NEW_PICTURE", uri));
     }
 }
