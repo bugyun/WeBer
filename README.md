@@ -8,8 +8,7 @@ Android x5 内核 WebView 的 Helper
 
 x5内核现在只提供了 32位 的 so 库，暂不支持 64 位。
 
-所以如果要使用的话，请在 主 build.gradle 中添加如下配置。
-如果想减少包体积的话，可以通过如下设置，减少 so 文件。
+如果想减少包体积的话，可以通过在主 build.gradle 中添加如下配置，减少 so 文件。
 ```java
 android {
     compileSdkVersion 28
