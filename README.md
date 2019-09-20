@@ -21,7 +21,7 @@ android {
 }
 ```
 
-如果报错的话，那么需要在gradle.properties文件中加上,如果不报错，请求不要添加。
+如果报错的话，那么需要在gradle.properties文件中加上,如果不报错，请不要添加。
 ```xml
 android.useDeprecatedNdk=true
 ```
