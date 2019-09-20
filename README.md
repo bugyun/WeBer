@@ -33,7 +33,7 @@ jcenter()仓库,在子项目中的 build.gradle 文件中添加
 
 ```java
 dependencies {
-    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.5'
+    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.6'
 }
 ```
 
