@@ -116,7 +116,16 @@ WeBerHelper.init(this,new QbSdk.PreInitCallback(){
 - ```capture="camera" : 如果有值的话，就会调用照相机功能，优先级大于 accept```
 - ```accept="image/*" : 选择文件,根据设置 image/*图片, */* 所有文件```
 
+#### onActivityResult
 不需要在 onActivityResult 事件中添加回调,使用 https://github.com/bugyun/AvoidOnResultHelper 优化回调.
+
+
+#### WeBerChromeClient.setFileChooserIntercept() 拦截器
+
+可以通过下面的方法添加拦截器，true 表示拦截此次打开（相机/文件/摄像机）的请求。
+可是通过判断 intent 的 getAction() 来进行权限的检查。代码如下
+
+
 ```java
 class TestWeBerChromeClient extends WeBerChromeClient {
     ...
