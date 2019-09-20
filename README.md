@@ -123,7 +123,8 @@ WeBerHelper.init(this,new QbSdk.PreInitCallback(){
 #### WeBerChromeClient.setFileChooserIntercept() 拦截器
 
 可以通过下面的方法添加拦截器，true 表示拦截此次打开（相机/文件/摄像机）的请求。
-可是通过判断 intent 的 getAction() 来进行权限的检查。代码如下
+
+可以通过判断 intent 的 getAction() 来进行权限的检查。代码如下
 
 
 ```java
