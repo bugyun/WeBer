@@ -41,6 +41,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation project(path: ':weber-core')
     implementation project(path: ':weber-x5-jsbridge')
-    implementation project(path: ':weber-x5-core')
-//    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.6'
+//    implementation project(path: ':weber-x5-core')
+    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.6'
 }
