@@ -22,7 +22,7 @@ android {
 ```
 
 如果报错的话，那么需要在gradle.properties文件中加上,如果不报错，请不要添加。
-```xml
+```java
 //在 com.android.tools.build:gradle:3.5.0 中已经不需要添加
 android.useDeprecatedNdk=true
 ```
