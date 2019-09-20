@@ -6,7 +6,10 @@ Android x5 内核 WebView 的 Helper
 
 基于 x5 版本：43697,更新日期：2019-08-08
 
-x5内核现在只提供了 v7a 的 so 库，所以如果要使用的话，请在 主 build.gradle 中添加如下配置。
+x5内核现在只提供了 32位 的 so 库，暂不支持 64 位。
+
+所以如果要使用的话，请在 主 build.gradle 中添加如下配置。
+如果想减少包体积的话，可以通过如下设置，减少 so 文件。
 ```java
 android {
     compileSdkVersion 28
@@ -18,6 +21,13 @@ android {
     }
 }
 ```
+
+如果报错的话，那么需要在gradle.properties文件中加上,如果不报错，请求不要添加。
+```xml
+android.useDeprecatedNdk=true
+```
+
+## 添加依赖
 
 jcenter()仓库,在子项目中的 build.gradle 文件中添加
 
