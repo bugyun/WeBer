@@ -133,7 +133,8 @@ public class WeBerChromeClient extends WebChromeClient implements AvoidOnResultH
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     fileUri = WeBerFileProvider
-                            .getUriForFile(fragmentActivity, fragmentActivity.getPackageName() + ".fileProvider",
+                            .getUriForFile(fragmentActivity,
+                                    fragmentActivity.getPackageName() + "." + WeBer.authority,
                                     mVFile);
                 } else {
                     fileUri = Uri.fromFile(mVFile);
@@ -159,17 +160,20 @@ public class WeBerChromeClient extends WebChromeClient implements AvoidOnResultH
             AvoidOnResultHelper.startActivityForResult(fragmentActivity, intent, this);
         } catch (Exception e) {//当系统没有相机应用的时候该应用会闪退,所以 try catch
             e.printStackTrace();
+            //h5 的动作要有一致性, uploadFiles 赋值之后必须要有 onReceiveValue(),不然会影响其他功能
+            if (uploadFiles != null) {
+                uploadFiles.onReceiveValue(null);
+            } else if (uploadFile != null) {
+                uploadFile.onReceiveValue(null);
+            }
+            reset();
         }
     }
 
     @Override
     public void onActivityResult(int resultCode, Intent data) {
         if (null == uploadFile && null == uploadFiles) {
-            uploadFiles = null;
-            uploadFile = null;
-            fileUri = null;
-            mVFile = null;
-            isCapture = false;
+            reset();
             return;
         }
         Uri result = data == null || resultCode != Activity.RESULT_OK ? null : data.getData();
@@ -184,11 +188,7 @@ public class WeBerChromeClient extends WebChromeClient implements AvoidOnResultH
         } else if (uploadFile != null) {
             uploadFile.onReceiveValue(result);
         }
-        uploadFiles = null;
-        uploadFile = null;
-        fileUri = null;
-        mVFile = null;
-        isCapture = false;
+        reset();
     }
 
     /**
@@ -206,5 +206,16 @@ public class WeBerChromeClient extends WebChromeClient implements AvoidOnResultH
         Uri uri = fragmentActivity.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
         // 通知相册更新
         fragmentActivity.sendBroadcast(new Intent("com.android.camera.NEW_PICTURE", uri));
+    }
+
+    /**
+     * 重置操作
+     */
+    private void reset() {
+        uploadFiles = null;
+        uploadFile = null;
+        fileUri = null;
+        mVFile = null;
+        isCapture = false;
     }
 }

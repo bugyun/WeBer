@@ -7,7 +7,6 @@ import android.view.View;
 import android.webkit.ValueCallback;
 import com.tencent.smtt.sdk.WebSettings;
 
-import vip.ruoyun.webkit.x5.WeBerHelper;
 import vip.ruoyun.webkit.x5.WeBerView;
 
 public class WeBer {
@@ -17,7 +16,7 @@ public class WeBer {
     }
 
     public static void init(Context context) {
-        WeBerHelper.init(context);
+//        weber.init(context);
     }
 
     public static void openFile(Context context, ValueCallback<Boolean> valueCallback) {
