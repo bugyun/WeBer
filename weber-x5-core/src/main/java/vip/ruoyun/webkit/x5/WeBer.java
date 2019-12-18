@@ -15,7 +15,7 @@ public class WeBer {
 
     public static final String debugTBSUrl = "http://debugtbs.qq.com/";
 
-    static String authority = "fileProvider";
+    static String authority = "provider";
 
     public static Builder with() {
         return new Builder();

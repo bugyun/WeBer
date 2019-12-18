@@ -33,7 +33,7 @@ jcenter()仓库,在子项目中的 build.gradle 文件中添加
 
 ```java
 dependencies {
-    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.7'
+    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.8'
 }
 ```
 
@@ -81,7 +81,7 @@ WeBer.with()
 
 //得到错误信息，当客户端 crash 的时候,可以在bugly上设置crash 并上传
 //map.put("x5crashInfo", x5CrashInfo);
-String crashMessage = WeBerHelper.getCrashMessage(this);
+String crashMessage = WeBer.getCrashMessage(this);
 ```
 
 ### 播放视频
@@ -89,14 +89,14 @@ String crashMessage = WeBerHelper.getCrashMessage(this);
 context参数只能是 activity 类型的 context，不能设置为 Application 的 context。
 
 ```java
-WeBerHelper.playVideo(context,videoUrl);
-WeBerHelper.playVideo(Context context, String videoUrl, Bundle extraData);
+WeBer.playVideo(context,videoUrl);
+WeBer.playVideo(Context context, String videoUrl, Bundle extraData);
 ```
 
 ### 打开本地文件
 
 ```java
-WeBerHelper.openFile(Context context, String filePath, HashMap<String, String> params,ValueCallback<Boolean> valueCallback);
+WeBer.openFile(Context context, String filePath, HashMap<String, String> params,ValueCallback<Boolean> valueCallback);
 ```
 
 ## WeBerChromeClient
@@ -233,7 +233,7 @@ public class WeberActivity extends AppCompatActivity {
             }
         });
         long time = System.currentTimeMillis();
-        mWeBerView.loadUrl(WeBerHelper.debugTBSUrl);
+        mWeBerView.loadUrl(WeBer.debugTBSUrl);
         TbsLog.d("time-cost", "cost time: " + (System.currentTimeMillis() - time));
         CookieSyncManager.createInstance(this);
         CookieSyncManager.getInstance().sync();
