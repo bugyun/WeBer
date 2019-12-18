@@ -172,11 +172,20 @@ public class WeBerChromeClient extends WebChromeClient implements AvoidOnResultH
 
     @Override
     public void onActivityResult(int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            if (uploadFiles != null) {
+                uploadFiles.onReceiveValue(null);
+            } else if (uploadFile != null) {
+                uploadFile.onReceiveValue(null);
+            }
+            reset();
+            return;
+        }
         if (null == uploadFile && null == uploadFiles) {
             reset();
             return;
         }
-        Uri result = data == null || resultCode != Activity.RESULT_OK ? null : data.getData();
+        Uri result = data == null ? null : data.getData();
         Uri[] uris = result == null ? null : new Uri[]{result};
         if (fileUri != null) {
 //            afterOpenCamera();

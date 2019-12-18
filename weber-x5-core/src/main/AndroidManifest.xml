@@ -34,7 +34,7 @@
         <!--Android N 相机-->
         <provider
             android:name=".WeBerFileProvider"
-            android:authorities="${applicationId}.fileProvider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
