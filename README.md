@@ -33,83 +33,71 @@ jcenter()仓库,在子项目中的 build.gradle 文件中添加
 
 ```java
 dependencies {
-    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.6'
+    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.7'
 }
 ```
 
 ## 使用
 
-Application中进行初始化
+### Application中进行初始化
 ```java
-WeBerHelper.init(context);//简单的初始化
+WeBer.with()
+        .multiProcessOptimize(true)//可选,接⼊TBS SDK后，解决⾸次启动卡顿问题
+        .interceptor(new WeBer.Interceptor() { //在初始化之前做一些配置
+            @Override
+            public void beforeInit(final Context context) {
+                //QbSdk 设置
+                QbSdk.setDownloadWithoutWifi(true);
+                QbSdk.setTbsListener(new TbsListener() {
+                    @Override
+                    public void onDownloadFinish(int i) {
+                        //tbs内核下载完成回调
+                    }
+
+                    @Override
+                    public void onInstallFinish(int i) {
+                        //内核安装完成回调，
+                    }
+
+                    @Override
+                    public void onDownloadProgress(int i) {
+                        //下载进度监听
+                    }
+                });
+            }
+        })
+        .preInitCallBack(new PreInitCallback() {//添加x5加载回调方法
+            @Override
+            public void onCoreInitFinished() {
+
+            }
+
+            @Override
+            public void onViewInitFinished(final boolean b) {
+
+            }
+        })
+        .build(this);
+
+//得到错误信息，当客户端 crash 的时候,可以在bugly上设置crash 并上传
+//map.put("x5crashInfo", x5CrashInfo);
+String crashMessage = WeBerHelper.getCrashMessage(this);
 ```
 
-播放视频,context参数只能是 activity 类型的 context，不能设置为 Application 的 context。
+### 播放视频
+
+context参数只能是 activity 类型的 context，不能设置为 Application 的 context。
+
 ```java
 WeBerHelper.playVideo(context,videoUrl);
 WeBerHelper.playVideo(Context context, String videoUrl, Bundle extraData);
 ```
 
-打开本地文件
+### 打开本地文件
+
 ```java
 WeBerHelper.openFile(Context context, String filePath, HashMap<String, String> params,ValueCallback<Boolean> valueCallback);
 ```
-
-## 初始化
-
-可选,接⼊TBS SDK后，解决⾸次启动卡顿问题
-```java
-WeBerHelper.multiProcessOptimize();
-//然后执行初始化操作
-WeBerHelper.init(context);
-```
-在初始化之前做一些配置
-```java
-WeBerHelper.init(this, new WeBerHelper.Interceptor() {
-    @Override
-    public void beforeInit() {//在初始化之前做一些配置
-        QbSdk.setDownloadWithoutWifi(true);
-        QbSdk.setTbsListener(new TbsListener() {
-            @Override
-            public void onDownloadFinish(int i) {
-                //tbs内核下载完成回调
-            }
-
-            @Override
-            public void onInstallFinish(int i) {
-                //内核安装完成回调，
-            }
-
-            @Override
-            public void onDownloadProgress(int i) {
-                //下载进度监听
-            }
-        });
-    }
-});
-
-//得到错误信息，当客户端 crash 的时候,可以在bugly上设置crash 并上传
-//map.put("x5crashInfo", x5CrashInfo);
-String crashMessage = WeBerHelper.getCrashMessage(this);
-
-```
-
-添加x5加载回调方法
-```java
-WeBerHelper.init(this,new QbSdk.PreInitCallback(){
-
-    @Override
-    public void onCoreInitFinished() {
-
-    }
-
-    @Override
-    public void onViewInitFinished(boolean b) {
-
-    }
-});
-```
-
 
 ## WeBerChromeClient
 
@@ -368,7 +356,7 @@ public class WeberActivity extends AppCompatActivity {
 使用
 ```
 dependencies {
-    implementation 'vip.ruoyun.webkit:weber-x5-jsbridge:1.0.0'
+    implementation 'vip.ruoyun.webkit:weber-x5-jsbridge:1.0.1'
 }
 ```
 

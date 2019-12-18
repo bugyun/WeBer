@@ -4,85 +4,90 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
-
 import com.tencent.smtt.export.external.TbsCoreSettings;
 import com.tencent.smtt.sdk.QbSdk;
 import com.tencent.smtt.sdk.TbsVideo;
 import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebView;
-
 import java.util.HashMap;
 
-public class WeBerHelper {
+public class WeBer {
 
     public static final String debugTBSUrl = "http://debugtbs.qq.com/";
 
-    /**
-     * 接⼊TBS SDK后，⾸次启动卡顿怎么办？
-     * <p>
-     * 由于在Android 5.0 +系统使⽤Art虚拟机在APP⾸次加载Dex时会进⾏Dex2oat，会有⼀定耗时，APP
-     * <p>
-     * 接⼊时可以尽早的调⽤QbSdk.initX5Environment⽅法，在异步线程初始化。如果想达到进⼀步的优 化效果，可以使⽤SpeedyClassLoader⽅案进⾏集成
-     * 多进程方式
-     * 在调用TBS init 初始化之前、创建WebView之前进行如下配置，以开启优化方案
-     */
-    public static void multiProcessOptimize() {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put(TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER, true);
-        QbSdk.initTbsSettings(map);
-    }
+    static String authority = "fileProvider";
 
-    /**
-     * 配置不使用多进程策略，即该方案仅在Android 5.1+系统上生效。
-     * TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE, false
-     */
-//    public static void multiThreadOptimize() {
-//        HashMap<String, Object> map = new HashMap<String, Object>();
-//        map.put(TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER, true);
-//        map.put(TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE, false);
-//        QbSdk.initTbsSettings(map);
-//    }
-    public static void init(@NonNull Context context) {
-        QbSdk.initX5Environment(context.getApplicationContext(), null); //x5内核初始化接口
+    public static Builder with() {
+        return new Builder();
     }
 
     public interface Interceptor {
-        void beforeInit();
+
+        void beforeInit(Context context);
     }
 
-    /**
-     * 初始化,在拦截器中添加配置
-     *
-     * @param context
-     * @param interceptor
-     */
-    public static void init(@NonNull Context context, @NonNull Interceptor interceptor) {
-        interceptor.beforeInit();
-        QbSdk.initX5Environment(context.getApplicationContext(), null); //x5内核初始化接口
+    public static class Builder {
+
+        private boolean isMultiProcessOptimize = false;
+
+        private QbSdk.PreInitCallback preInitCallback;
+
+        private Interceptor interceptor;
+
+        private Builder() {
+        }
+
+        /**
+         * 接⼊TBS SDK后，⾸次启动卡顿怎么办？
+         * <p>
+         * 由于在Android 5.0 +系统使⽤Art虚拟机在APP⾸次加载Dex时会进⾏Dex2oat，会有⼀定耗时，APP
+         * <p>
+         * 接⼊时可以尽早的调⽤QbSdk.initX5Environment⽅法，在异步线程初始化。如果想达到进⼀步的优 化效果，可以使⽤SpeedyClassLoader⽅案进⾏集成
+         * 多进程方式
+         * 在调用TBS init 初始化之前、创建WebView之前进行如下配置，以开启优化方案
+         */
+        public Builder multiProcessOptimize(boolean isMultiProcessOptimize) {
+            this.isMultiProcessOptimize = isMultiProcessOptimize;
+            return this;
+        }
+
+        public Builder preInitCallBack(@NonNull QbSdk.PreInitCallback preInitCallback) {
+            this.preInitCallback = preInitCallback;
+            return this;
+        }
+
+        /**
+         * 在初始化之前做一些配置
+         */
+        public Builder interceptor(Interceptor interceptor) {
+            this.interceptor = interceptor;
+            return this;
+        }
+
+        public Builder authority(@NonNull String authority) {
+            WeBer.authority = authority;
+            return this;
+        }
+
+        public void build(Context context) {
+            if (isMultiProcessOptimize) {
+                HashMap<String, Object> map = new HashMap<String, Object>();
+                map.put(TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER, true);
+                map.put(TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE, true);
+                QbSdk.initTbsSettings(map);
+            }
+            if (interceptor != null) {
+                interceptor.beforeInit(context);
+            }
+            QbSdk.initX5Environment(context.getApplicationContext(), preInitCallback); //x5内核初始化接口
+        }
     }
 
-    /**
-     * 函数内是异步执行所以不会阻塞 App 主线程，这个函数内是轻量级执行所以对 App 启动性能没有影响，
-     * 当 App 后续创建 webview 时就可以首次加载 x5 内核了
-     *
-     * @param context
-     */
-    public static void init(@NonNull Context context, @NonNull QbSdk.PreInitCallback preInitCallback) {
-        QbSdk.initX5Environment(context.getApplicationContext(), preInitCallback);//x5内核初始化接口
-    }
-
-    public static void init(@NonNull Context context, @NonNull QbSdk.PreInitCallback preInitCallback, @NonNull Interceptor interceptor) {
-        interceptor.beforeInit();
-        QbSdk.initX5Environment(context.getApplicationContext(), preInitCallback);//x5内核初始化接口
-    }
-
+    //--------------静态方法----------------------------
 
     /**
      * 得到错误信息，当客户端 crash 的时候
      * map.put("x5crashInfo", x5CrashInfo);
-     *
-     * @param context
-     * @return
      */
     public static String getCrashMessage(Context context) {
         return WebView.getCrashExtraMessage(context);
@@ -123,7 +128,8 @@ public class WeBerHelper {
      * @param valueCallback 提供 miniqb 打开/关闭时给调用方回调通知,以便应用层做相应处理。 在单独进程打开文件的场景中，回调参数出现如下字符时，表示可以关闭当前进程，避免内存占用。
      * @return 1：用 QQ 浏览器打开 2：用 MiniQB 打开 3：调起阅读器弹框 -1：filePath 为空 打开失败
      */
-    public static int openFile(Context context, String filePath, HashMap<String, String> params, final ValueCallback<Boolean> valueCallback) {
+    public static int openFile(Context context, String filePath, HashMap<String, String> params,
+            final ValueCallback<Boolean> valueCallback) {
         QbSdk.canOpenFile(context, filePath, new ValueCallback<Boolean>() {
             @Override
             public void onReceiveValue(Boolean isCanOpen) {

@@ -11,8 +11,7 @@ import com.tencent.smtt.sdk.TbsReaderView;
 import com.tencent.smtt.sdk.WebView;
 
 import java.io.File;
-
-import vip.ruoyun.webkit.x5.WeBerHelper;
+import vip.ruoyun.webkit.x5.WeBer;
 
 /**
  * Created by ruoyun on 2019-07-02.
@@ -24,7 +23,7 @@ public class Test {
 
 
     public void test(Context context) {
-        WeBerHelper.init(context);
+        WeBer.with().build(context);
     }
 
 
@@ -42,11 +41,13 @@ public class Test {
             @Override
             public boolean onLongClick(View v) {
                 WebView.HitTestResult result = ((WebView) v).getHitTestResult();
-                if (null == result)
+                if (null == result) {
                     return false;
+                }
                 int type = result.getType();
-                if (type == WebView.HitTestResult.UNKNOWN_TYPE)
+                if (type == WebView.HitTestResult.UNKNOWN_TYPE) {
                     return false;
+                }
                 // 这里可以拦截很多类型，我们只处理图片类型就可以了
                 switch (type) {
                     case WebView.HitTestResult.PHONE_TYPE: // 处理拨号

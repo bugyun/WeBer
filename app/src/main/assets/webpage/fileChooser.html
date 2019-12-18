@@ -17,33 +17,40 @@
             -webkit-background-clip: border-box;
 
         }
+
+
+
     </style>
-    <script >
+    <script>
         var display=function (){
             var path=document.getElementById("file_chooser").textContent;
             document.getElementById("filechooser_display").innerHTML("<b>"+path+"</b>");
         }
+
     </script>
 </head>
 <body>
-    <ul class="listview">
-        <li class="listviewItem">
-            <fieldset class="itemset">
-                <input class="filechooser" id="file_chooser" type="file" placeholder="file path" onchange="display()" oninput="display()"
-                        accept="*/*" ><br>
+<ul class="listview">
+    <li class="listviewItem">
+        <fieldset class="itemset">
+            <input class="filechooser" id="file_chooser" type="file" placeholder="file path" onchange="display()"
+                   oninput="display()"
+                   name="打开文件"
+                   accept="*/*"><br>
 
-                <input class="filechooser2" id="file_chooser2" type="file" placeholder="file path" onchange="display()" oninput="display()"
-                       accept="*/*" capture="camera" value="打开相机" ><br>
-<!--                capture="camera"-->
-<!--                multiple="multiple"-->
+            <input class="filechooser2" id="file_chooser2" type="file" placeholder="file path" onchange="display()"
+                   oninput="display()"
+                   accept="*/*" capture="camera" value="打开相机" name="打开相机"><br>
+            <!--                capture="camera"-->
+            <!--                multiple="multiple"-->
 
-                <p id="filechooser_display"></p>
-                <div class="line_black"></div>
+            <p id="filechooser_display"></p>
+            <div class="line_black"></div>
 
-            </fieldset>
-        </li>
+        </fieldset>
+    </li>
 
-    </ul>
+</ul>
 
 </body>
 

@@ -94,13 +94,13 @@ public class WeberActivity extends AppCompatActivity {
         chromeClient.setFileChooserIntercept(new WeBerChromeClient.FileChooserIntercept() {
             @Override
             public boolean onFileChooserIntercept(boolean isCapture, String[] acceptType, Intent intent) {
-                if (MediaStore.ACTION_VIDEO_CAPTURE.equals(intent.getAction())) {//要使用摄像机
-                    //要使用摄像机,判断权限 android.permission.CAMERA
-                    return true;//拦截
-                } else if (MediaStore.ACTION_IMAGE_CAPTURE.equals(intent.getAction())) {//要使用照相机
-                    //要使用照相机,判断权限 android.permission.CAMERA
-                    return true;//拦截
-                }
+//                if (MediaStore.ACTION_VIDEO_CAPTURE.equals(intent.getAction())) {//要使用摄像机
+//                    //要使用摄像机,判断权限 android.permission.CAMERA
+//                    return true;//拦截
+//                } else if (MediaStore.ACTION_IMAGE_CAPTURE.equals(intent.getAction())) {//要使用照相机
+//                    //要使用照相机,判断权限 android.permission.CAMERA
+//                    return true;//拦截
+//                }
                 //处理 intent ,修改或者添加参数
                 return false;
             }
@@ -139,12 +139,6 @@ public class WeberActivity extends AppCompatActivity {
             PlayVideoFunc.enablePageVideoFunc(mWeBerView);
         }
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        chromeClient.onActivityResult(requestCode, resultCode, data);
-//    }
 
     /**
      * 激活WebView为活跃状态，能正常执行网页的响应
@@ -227,12 +221,14 @@ public class WeberActivity extends AppCompatActivity {
 
         @Override
         public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
-            //1.可以通过 url 来判断是否要接受证书
-            if (view.getUrl().contains("http://ruoyun.vip") || view.getUrl().contains("https://ruoyun.vip")) {
-                handler.proceed();
-            } else {
-                handler.cancel();//super.onReceivedSslError(view, handler, error);
-            }
+            handler.proceed();
+
+//            //1.可以通过 url 来判断是否要接受证书
+//            if (view.getUrl().contains("http://ruoyun.vip") || view.getUrl().contains("https://ruoyun.vip")) {
+//                handler.proceed();
+//            } else {
+//                handler.cancel();//super.onReceivedSslError(view, handler, error);
+//            }
 
             //2.弹框,让用户来决定
             //https://codeday.me/bug/20170927/77276.html
