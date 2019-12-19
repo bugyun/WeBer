@@ -77,6 +77,9 @@ WeBer.with()
 
             }
         })
+        //配置 android:authorities => "${applicationId}."+"${authority}"
+        //下面会生成  => android:authorities="${applicationId}.provider"
+        .authority("provider")
         .build(this);
 
 //得到错误信息，当客户端 crash 的时候,可以在bugly上设置crash 并上传
@@ -97,6 +100,11 @@ WeBer.playVideo(Context context, String videoUrl, Bundle extraData);
 
 ```java
 WeBer.openFile(Context context, String filePath, HashMap<String, String> params,ValueCallback<Boolean> valueCallback);
+```
+
+### 打开 Chrome 调试功能
+```java
+WeBerView.setWebContentsDebuggingEnabled(true);
 ```
 
 ## WeBerChromeClient
