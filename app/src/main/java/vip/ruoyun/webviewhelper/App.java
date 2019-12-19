@@ -49,6 +49,7 @@ public class App extends Application {
 
                     }
                 })
+                .authority("provider")
                 .build(this);
     }
 }

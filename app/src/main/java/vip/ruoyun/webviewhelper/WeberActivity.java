@@ -79,6 +79,8 @@ public class WeberActivity extends AppCompatActivity {
 
         });
 
+        WeBerView.setWebContentsDebuggingEnabled(true);
+
         mWeBerView.setWebChromeClient(chromeClient);
         mWeBerView.setWebViewClient(viewClient);
         viewClient.setOnLoadWebViewListener(new WeBerViewClient.OnLoadWebViewListener() {
