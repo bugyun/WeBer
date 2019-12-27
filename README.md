@@ -27,6 +27,14 @@ android {
 android.useDeprecatedNdk=true
 ```
 
+### 注意
+
+[x5内核在 targetAPI 为Q时在Android Q上必现crash](https://x5.tencent.com/tbs/technical.html#/detail/sdk/1/9ba4fb91-a525-45ec-8dd2-29a91bf02c5d)
+
+> 目前X5内核尚未全部支持targetAPI Android Q，在部分Android Q机型下会出现crash，我们正在解决中，请将您的target APi 调整为Q及以下或者在Android Q中调用QbSdk.forceSysWebView禁用X5。
+
+请在项目中注意这个问题，如果想要使用 x5 ，请设置 targetAPI 28 ,官网如果修复了这个问题，此项目会立刻升级 x5 版本。
+
 ## 添加依赖
 
 jcenter()仓库,在子项目中的 build.gradle 文件中添加
