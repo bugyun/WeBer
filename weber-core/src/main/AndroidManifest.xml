@@ -1,14 +1,25 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="vip.ruoyun.webkit">
+<manifest package="vip.ruoyun.webkit"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application>
-        <!--关闭 Google 安全浏览功能验证网址功能-->
-        <meta-data
-            android:name="android.webkit.WebView.EnableSafeBrowsing"
-            android:value="false"/>
-        <!--停用Google指标收集功能-->
-        <meta-data
-            android:name="android.webkit.WebView.MetricsOptOut"
-            android:value="true"/>
+
+        <!--Android N 相机-->
+        <provider
+            android:name=".WeBerFileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/weber_file_paths" />
+        </provider>
+
     </application>
 </manifest>

@@ -13,8 +13,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button mButton = findViewById(R.id.mButton);
+        Button mX5Button = findViewById(R.id.mX5Button);
 
         mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, WebActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mX5Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, WeberActivity.class);

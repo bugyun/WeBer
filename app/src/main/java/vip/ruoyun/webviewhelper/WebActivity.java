@@ -3,6 +3,7 @@ package vip.ruoyun.webviewhelper;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -33,12 +34,18 @@ import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import vip.ruoyun.webkit.WeBer;
+import vip.ruoyun.webkit.WeBerChromeClient;
+import vip.ruoyun.webkit.WeBerChromeClient.FileChooserIntercept;
 
 public class WebActivity extends AppCompatActivity {
 
     private WebView mWebView;
+
     private Button mButton;
+
     private ViewGroup rootView;
+
     private boolean isDebug;
 
     private Handler handler = new Handler(Looper.myLooper());
@@ -69,10 +76,20 @@ public class WebActivity extends AppCompatActivity {
         wetSettings.setDomStorageEnabled(true);//DOM storage 是HTML5提供的一种标准接口，主要将键值对存储在本地
         wetSettings.setJavaScriptEnabled(true);
 
+        WeBerChromeClient weBerChromeClient = new WeBerChromeClient(this);
+        weBerChromeClient.setFileChooserIntercept(new FileChooserIntercept() {
+            @Override
+            public boolean onFileChooserIntercept(final boolean isCapture, final String[] acceptType,
+                    final Intent intent) {
+                return false;
+            }
+        });
+        mWebView.setWebChromeClient(weBerChromeClient);
 
         mWebView.setDownloadListener(new DownloadListener() {
             @Override
-            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype,
+                    long contentLength) {
 
             }
         });
@@ -126,149 +143,8 @@ public class WebActivity extends AppCompatActivity {
 //                }
             }
         });
-
-
-        mWebView.setWebChromeClient(new WebChromeClient() {
-
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                super.onProgressChanged(view, newProgress);
-            }
-
-            @Override
-            public void onReceivedTitle(WebView view, String title) {
-                super.onReceivedTitle(view, title);
-            }
-
-            @Override
-            public void onReceivedIcon(WebView view, Bitmap icon) {
-                super.onReceivedIcon(view, icon);
-            }
-
-            @Override
-            public void onReceivedTouchIconUrl(WebView view, String url, boolean precomposed) {
-                super.onReceivedTouchIconUrl(view, url, precomposed);
-            }
-
-            @Override
-            public void onShowCustomView(View view, CustomViewCallback callback) {
-                super.onShowCustomView(view, callback);
-            }
-
-            @Override
-            public void onShowCustomView(View view, int requestedOrientation, CustomViewCallback callback) {
-                super.onShowCustomView(view, requestedOrientation, callback);
-            }
-
-            @Override
-            public void onHideCustomView() {
-                super.onHideCustomView();
-            }
-
-            @Override
-            public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
-                return super.onCreateWindow(view, isDialog, isUserGesture, resultMsg);
-            }
-
-            @Override
-            public void onRequestFocus(WebView view) {
-                super.onRequestFocus(view);
-            }
-
-            @Override
-            public void onCloseWindow(WebView window) {
-                super.onCloseWindow(window);
-            }
-
-            @Override
-            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-                return super.onJsAlert(view, url, message, result);
-            }
-
-            @Override
-            public boolean onJsConfirm(WebView view, String url, String message, JsResult result) {
-                return super.onJsConfirm(view, url, message, result);
-            }
-
-            @Override
-            public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
-                return super.onJsPrompt(view, url, message, defaultValue, result);
-            }
-
-            @Override
-            public boolean onJsBeforeUnload(WebView view, String url, String message, JsResult result) {
-                return super.onJsBeforeUnload(view, url, message, result);
-            }
-
-            @Override
-            public void onExceededDatabaseQuota(String url, String databaseIdentifier, long quota, long estimatedDatabaseSize, long totalQuota, WebStorage.QuotaUpdater quotaUpdater) {
-                super.onExceededDatabaseQuota(url, databaseIdentifier, quota, estimatedDatabaseSize, totalQuota, quotaUpdater);
-            }
-
-            @Override
-            public void onReachedMaxAppCacheSize(long requiredStorage, long quota, WebStorage.QuotaUpdater quotaUpdater) {
-                super.onReachedMaxAppCacheSize(requiredStorage, quota, quotaUpdater);
-            }
-
-            @Override
-            public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
-                super.onGeolocationPermissionsShowPrompt(origin, callback);
-            }
-
-            @Override
-            public void onGeolocationPermissionsHidePrompt() {
-                super.onGeolocationPermissionsHidePrompt();
-            }
-
-            @Override
-            public void onPermissionRequest(PermissionRequest request) {
-                super.onPermissionRequest(request);
-            }
-
-            @Override
-            public void onPermissionRequestCanceled(PermissionRequest request) {
-                super.onPermissionRequestCanceled(request);
-            }
-
-            @Override
-            public boolean onJsTimeout() {
-                return super.onJsTimeout();
-            }
-
-            @Override
-            public void onConsoleMessage(String message, int lineNumber, String sourceID) {
-                super.onConsoleMessage(message, lineNumber, sourceID);
-            }
-
-            @Override
-            public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-                return super.onConsoleMessage(consoleMessage);
-            }
-
-            @Nullable
-            @Override
-            public Bitmap getDefaultVideoPoster() {
-                return super.getDefaultVideoPoster();
-            }
-
-            @Nullable
-            @Override
-            public View getVideoLoadingProgressView() {
-                return super.getVideoLoadingProgressView();
-            }
-
-            @Override
-            public void getVisitedHistory(ValueCallback<String[]> callback) {
-                super.getVisitedHistory(callback);
-            }
-
-            @Override
-            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-                return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
-            }
-        });
-
-        mWebView.loadUrl("file:///android_asset/javascript.html");
+        //file:///android_asset/webpage/fileChooser.html
+        mWebView.loadUrl("file:///android_asset/webpage/fileChooser.html");
 
     }
 
@@ -283,7 +159,6 @@ public class WebActivity extends AppCompatActivity {
             long newTime = System.currentTimeMillis();
             Log.e("zyh", newTime + "");
             System.out.println("JS调用了Android的hello方法");
-
 
             handler.post(new Runnable() {
                 @Override

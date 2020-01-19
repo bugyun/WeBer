@@ -1,2 +1,3 @@
+include ':weber-test'
 include ':app', ':weber-core', ':weber-x5-core', ':weber-x5-jsbridge'
 rootProject.name='WebViewHelper'
