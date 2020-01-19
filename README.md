@@ -13,7 +13,7 @@ Android x5 内核 WebView 的 Helper
 ## 关于
 如果不想使用 X5 内核,那么现在有支持系统的 WebView input 标签功能的版本
 
-[我是链接](https://github.com/bugyun/WeBer/blob/develop/weber-core/README.md)
+[我是链接](https://github.com/bugyun/WeBer/blob/master/weber-core/README.md)
 
 ## 使用方法
 
