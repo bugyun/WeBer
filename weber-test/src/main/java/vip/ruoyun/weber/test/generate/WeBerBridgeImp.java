@@ -1,9 +1,9 @@
-package vip.ruoyun.webkit.generate;
+package vip.ruoyun.weber.test.generate;
 
 import android.text.TextUtils;
-import vip.ruoyun.webkit.WeBerDemo.Android2JS;
-import vip.ruoyun.webkit.WeBerDemo.AndroidtoJs;
-import vip.ruoyun.webkit.WeBerView;
+import vip.ruoyun.weber.test.WeBerDemo.Android2JS;
+import vip.ruoyun.weber.test.WeBerDemo.AndroidtoJs;
+import vip.ruoyun.weber.test.WeBerView;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

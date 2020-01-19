@@ -10,6 +10,14 @@ Android x5 内核 WebView 的 Helper
 - 打开图片 `<input accept="image/*"/>`
 - 等等相关文件操作
 
+## 关于
+如果不想使用 X5 内核,那么现在有支持 input 标签功能的正常版本,支持系统的 WebView
+```
+dependencies {
+    implementation 'vip.ruoyun.webkit:weber-core:1.0.8'
+}
+```
+
 ## 使用方法
 
 基于 x5 版本：43697,更新日期：2019-08-08

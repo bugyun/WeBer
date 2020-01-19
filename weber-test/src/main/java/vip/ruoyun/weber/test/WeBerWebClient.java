@@ -1,4 +1,4 @@
-package vip.ruoyun.webkit;
+package vip.ruoyun.weber.test;
 
 import android.net.Uri;
 import android.webkit.WebView;
@@ -7,7 +7,7 @@ import android.webkit.WebViewClient;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
-import vip.ruoyun.webkit.generate.WeBerBridgeImp;
+import vip.ruoyun.weber.test.generate.WeBerBridgeImp;
 
 public class WeBerWebClient extends WebViewClient {
 

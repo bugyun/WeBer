@@ -1,11 +1,11 @@
-package vip.ruoyun.webkit;
+package vip.ruoyun.weber.test;
 
 import android.net.Uri;
 import android.webkit.JsPromptResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
-import vip.ruoyun.webkit.generate.WeBerBridgeImp;
+import vip.ruoyun.weber.test.generate.WeBerBridgeImp;
 
 public class WeBerWebChormeClient extends WebChromeClient {
 

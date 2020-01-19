@@ -1,4 +1,4 @@
-package vip.ruoyun.webkit;
+package vip.ruoyun.weber.test;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

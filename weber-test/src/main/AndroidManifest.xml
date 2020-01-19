@@ -1,0 +1,14 @@
+<manifest package="vip.ruoyun.weber.test"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <!--关闭 Google 安全浏览功能验证网址功能-->
+        <meta-data
+            android:name="android.webkit.WebView.EnableSafeBrowsing"
+            android:value="false" />
+        <!--停用Google指标收集功能-->
+        <meta-data
+            android:name="android.webkit.WebView.MetricsOptOut"
+            android:value="true" />
+    </application>
+</manifest>

@@ -3,6 +3,7 @@ package vip.ruoyun.webviewhelper;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -33,12 +34,18 @@ import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import vip.ruoyun.webkit.WeBer;
+import vip.ruoyun.webkit.WeBerChromeClient;
+import vip.ruoyun.webkit.WeBerChromeClient.FileChooserIntercept;
 
 public class WebActivity extends AppCompatActivity {
 
     private WebView mWebView;
+
     private Button mButton;
+
     private ViewGroup rootView;
+
     private boolean isDebug;
 
     private Handler handler = new Handler(Looper.myLooper());
@@ -69,10 +76,21 @@ public class WebActivity extends AppCompatActivity {
         wetSettings.setDomStorageEnabled(true);//DOM storage 是HTML5提供的一种标准接口，主要将键值对存储在本地
         wetSettings.setJavaScriptEnabled(true);
 
+        WeBer.with().build(this);
+        WeBerChromeClient weBerChromeClient = new WeBerChromeClient(this);
+        weBerChromeClient.setFileChooserIntercept(new FileChooserIntercept() {
+            @Override
+            public boolean onFileChooserIntercept(final boolean isCapture, final String[] acceptType,
+                    final Intent intent) {
+                return false;
+            }
+        });
+        mWebView.setWebChromeClient(weBerChromeClient);
 
         mWebView.setDownloadListener(new DownloadListener() {
             @Override
-            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype,
+                    long contentLength) {
 
             }
         });
@@ -126,7 +144,6 @@ public class WebActivity extends AppCompatActivity {
 //                }
             }
         });
-
 
         mWebView.setWebChromeClient(new WebChromeClient() {
 
@@ -191,7 +208,8 @@ public class WebActivity extends AppCompatActivity {
             }
 
             @Override
-            public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
+            public boolean onJsPrompt(WebView view, String url, String message, String defaultValue,
+                    JsPromptResult result) {
                 return super.onJsPrompt(view, url, message, defaultValue, result);
             }
 
@@ -201,12 +219,15 @@ public class WebActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onExceededDatabaseQuota(String url, String databaseIdentifier, long quota, long estimatedDatabaseSize, long totalQuota, WebStorage.QuotaUpdater quotaUpdater) {
-                super.onExceededDatabaseQuota(url, databaseIdentifier, quota, estimatedDatabaseSize, totalQuota, quotaUpdater);
+            public void onExceededDatabaseQuota(String url, String databaseIdentifier, long quota,
+                    long estimatedDatabaseSize, long totalQuota, WebStorage.QuotaUpdater quotaUpdater) {
+                super.onExceededDatabaseQuota(url, databaseIdentifier, quota, estimatedDatabaseSize, totalQuota,
+                        quotaUpdater);
             }
 
             @Override
-            public void onReachedMaxAppCacheSize(long requiredStorage, long quota, WebStorage.QuotaUpdater quotaUpdater) {
+            public void onReachedMaxAppCacheSize(long requiredStorage, long quota,
+                    WebStorage.QuotaUpdater quotaUpdater) {
                 super.onReachedMaxAppCacheSize(requiredStorage, quota, quotaUpdater);
             }
 
@@ -263,7 +284,8 @@ public class WebActivity extends AppCompatActivity {
             }
 
             @Override
-            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback,
+                    FileChooserParams fileChooserParams) {
                 return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
             }
         });
@@ -283,7 +305,6 @@ public class WebActivity extends AppCompatActivity {
             long newTime = System.currentTimeMillis();
             Log.e("zyh", newTime + "");
             System.out.println("JS调用了Android的hello方法");
-
 
             handler.post(new Runnable() {
                 @Override
