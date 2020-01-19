@@ -2,6 +2,14 @@
 Android x5 内核 WebView 的 Helper
 完美兼容 AndroidX 和 android 库，欢迎使用~~~
 
+## 特有功能
+支持 h5 中 input 标签,Android 系统的 WebView 只支持文件操作.
+- 打开所有文件 `<input capture="*/*"/>`
+- 打开照相机 `<input capture="camera"/>` 优先级大于 accept
+- 打开摄像机 `<input accept="video/*"/>`
+- 打开图片 `<input accept="image/*"/>`
+- 等等相关文件操作
+
 ## 使用方法
 
 基于 x5 版本：43697,更新日期：2019-08-08
@@ -123,7 +131,7 @@ WeBerView.setWebContentsDebuggingEnabled(true);
 ```html
 <input class="filechooser" id="file_chooser" type="file" placeholder="file path">
 ```
-#### 注意
+#### input 标签相关配置
 
 - ```multiple="multiple" : 只能支持单文件，所以设置multiple无效```
 - ```accept="video/*" : 打开摄像机功能```
@@ -136,9 +144,9 @@ WeBerView.setWebContentsDebuggingEnabled(true);
 
 #### WeBerChromeClient.setFileChooserIntercept() 拦截器
 
-可以通过下面的方法添加拦截器，true 表示拦截此次打开（相机/文件/摄像机）的请求。
+如果直接使用 input 标签来打开具体对应的功能,是需要 Android 手机对应的权限的.可以通过下面的方法添加拦截器，true 表示拦截此次打开（相机/文件/摄像机）的请求来判断是否炫需要权限。
 
-可以通过判断 intent 的 getAction() 来进行权限的检查。代码如下
+可以通过判断 intent 的 getAction() 来进行具体权限的检查,然后请求对应的权限。代码如下
 
 
 ```java
