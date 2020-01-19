@@ -11,10 +11,10 @@ Android x5 内核 WebView 的 Helper
 - 等等相关文件操作
 
 ## 关于
-如果不想使用 X5 内核,那么现在有支持 input 标签功能的正常版本,支持系统的 WebView
+如果不想使用 X5 内核,那么现在有支持 input 标签功能的版本来支持系统的 WebView
 ```
 dependencies {
-    implementation 'vip.ruoyun.webkit:weber-core:1.0.8'
+    implementation 'vip.ruoyun.webkit:weber-core:1.0.0'
 }
 ```
 
