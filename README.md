@@ -3,7 +3,7 @@ Android x5 内核 WebView 的 Helper
 完美兼容 AndroidX 和 android 库，欢迎使用~~~
 
 ## 特有功能
-支持 h5 中 input 标签，标准 Android WebView 不支持此标签并且只支持文件操作。
+支持 h5 中 input 标签，标准 Android WebView 不支持此标签并且只支持单文件操作。
 - 打开所有文件 `<input capture="*/*"/>`
 - 打开照相机 `<input capture="camera"/>` 优先级大于 accept
 - 打开摄像机 `<input accept="video/*"/>`
