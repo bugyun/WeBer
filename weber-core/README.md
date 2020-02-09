@@ -62,6 +62,8 @@ WeBer.with()
 
 如果直接使用 input 标签来打开具体对应的功能,是需要 Android 手机对应的权限的.可以通过下面的方法添加拦截器，true 表示拦截此次打开（相机/文件/摄像机）的请求来判断是否炫需要权限。
 
+权限库推荐使用 https://github.com/bugyun/MissPermission 来进行权限的检查和请求。
+
 可以通过判断 intent 的 getAction() 来进行具体权限的检查,然后请求对应的权限。代码如下
 
 
