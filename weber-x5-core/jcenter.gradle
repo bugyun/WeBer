@@ -12,7 +12,7 @@ publish {
     userOrg = 'bugyun'        //bintray.com用户名
     groupId = 'vip.ruoyun.webkit'    //jcenter group
     artifactId = 'weber-x5-core'   //项目名称 name
-    publishVersion = '1.0.8'//版本号 version
+    publishVersion = '1.0.9'//版本号 version
     desc = 'Android x5 内核 WebView 的 Helper'//描述
     website = 'https://github.com/bugyun/WeBer' // github 网址
 }
