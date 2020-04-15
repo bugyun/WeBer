@@ -30,36 +30,17 @@ Android x5 内核 WebView 的 Helper
 
 ## 使用方法
 
-基于 x5 版本：43697,更新日期：2019-08-08
+基于 x5 版本：43903,更新日期：2020-04-13
 
-x5内核现在只提供了 32位 的 so 库，暂不支持 64 位。
+~~x5内核现在只提供了 32位 的 so 库，暂不支持 64 位。~~
 
-如果想减少包体积的话，可以通过在主 build.gradle 中添加如下配置，减少 so 文件。
-```java
-android {
-    compileSdkVersion 28
-    minSdkVersion 15 //x5 要求最低版本
-    defaultConfig {
-        ndk {
-            abiFilters "armeabi-v7a"
-        }
-    }
-}
-```
-
-如果报错的话，那么需要在gradle.properties文件中加上,如果不报错，请不要添加。
-```java
-//在 com.android.tools.build:gradle:3.5.0 中已经不需要添加
-android.useDeprecatedNdk=true
-```
+现在已经提供64版本~~
 
 ### 注意
 
-[x5内核在 targetAPI 为Q时在Android Q上必现crash](https://x5.tencent.com/tbs/technical.html#/detail/sdk/1/9ba4fb91-a525-45ec-8dd2-29a91bf02c5d)
+新版本中已经修复此问题
 
-> 目前X5内核尚未全部支持targetAPI Android Q，在部分Android Q机型下会出现crash，我们正在解决中，请将您的target APi 调整为Q及以下或者在Android Q中调用QbSdk.forceSysWebView禁用X5。
-
-请在项目中注意这个问题，如果想要使用 x5 ，请设置 targetAPI 28 ,官网如果修复了这个问题，此项目会立刻升级 x5 版本。
+~~[x5内核在 targetAPI 为Q时在Android Q上必现crash](https://x5.tencent.com/tbs/technical.html#/detail/sdk/1/9ba4fb91-a525-45ec-8dd2-29a91bf02c5d)~~
 
 ## 添加依赖
 
@@ -67,7 +48,7 @@ jcenter()仓库,在子项目中的 build.gradle 文件中添加
 
 ```java
 dependencies {
-    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.8'
+    implementation 'vip.ruoyun.webkit:weber-x5-core:1.0.9'
 }
 ```
 
