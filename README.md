@@ -42,6 +42,18 @@ Android x5 内核 WebView 的 Helper
 
 ~~[x5内核在 targetAPI 为Q时在Android Q上必现crash](https://x5.tencent.com/tbs/technical.html#/detail/sdk/1/9ba4fb91-a525-45ec-8dd2-29a91bf02c5d)~~
 
+### 官网介绍文档
+
+[快速接入](https://x5.tencent.com/docs/access.html)
+
+[webview参数介绍](https://x5.tencent.com/docs/webview.html)
+
+[文件功能](https://x5.tencent.com/docs/file_interface.html)
+
+[视频功能](https://x5.tencent.com/docs/video.html)
+
+[常见问题](https://x5.tencent.com/docs/questions.html)
+
 ## 添加依赖
 
 jcenter()仓库,在子项目中的 build.gradle 文件中添加
